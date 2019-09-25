@@ -1,19 +1,22 @@
 package com.pathfinding;
 
-import java.awt.Point;
-import java.io.*;
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
-public class InputHandler {
-	
-	public SquareGraph readMap(String filename) throws IOException, InvalidLetterException{
+class InputHandler {
+
+	SquareGraph readMap(String filename) throws IOException, InvalidLetterException {
 		
 		File file = new File(filename);
-		BufferedReader in = new BufferedReader(new FileReader(filename));;
+		BufferedReader in = new BufferedReader(new FileReader(filename));
 		
 
 		try{
-			
-			String dimension =in.readLine();
+
+			String dimension = in.readLine();
 			int mapDimension = Integer.parseInt(dimension);
 			
 			SquareGraph graph = new SquareGraph(mapDimension);

@@ -9,4 +9,7 @@ Run `docker build .` for unit testing
 Once your test are passing, run `./.tools/build.sh` script to get your unique java file to be put in Codingame IDE.
 
 ## Development guidelines
+
 The script which concatenate only reads player package, if you need more packages, modify accordingly the script.
+
+You only can use private-package classes

@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class A_StarAlgorithm {
+class AStarAlgorithm {
 
-  public static void main(String[] args)
+  static void main(String[] args)
       throws InvalidLetterException, IOException {
 
     if (args.length != 1) {

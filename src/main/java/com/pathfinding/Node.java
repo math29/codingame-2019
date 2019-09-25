@@ -1,5 +1,6 @@
 package com.pathfinding;
-import java.awt.Point;
+
+import java.awt.*;
 
 
 class Node implements Comparable<Node>{

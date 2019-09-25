@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SquareGraph {
+class SquareGraph {
 
   private Node[][] map;
   private Point startPosition;
@@ -14,7 +14,7 @@ public class SquareGraph {
   private Heap<Node> openNodes;
   private Set<Node> closedNodes;
 
-  public SquareGraph(int mapDimension) {
+  SquareGraph(int mapDimension) {
     map = new Node[mapDimension][mapDimension];
     startPosition = new Point();
     targetPosition = new Point();
@@ -22,53 +22,53 @@ public class SquareGraph {
     closedNodes = new HashSet<>();
   }
 
-  public Node getMapCell(Point coord) {
+  Node getMapCell(Point coord) {
     return map[(int)coord.getX()][(int)coord.getY()];
   }
 
-  public void setMapCell(Point coord, Node n) {
+  void setMapCell(Point coord, Node n) {
     map[(int)coord.getX()][(int)coord.getY()] = n;
   }
 
-  public Point getStartPosition() {
+  Point getStartPosition() {
     return startPosition;
   }
 
-  public Point getTargetPosition() {
+  Point getTargetPosition() {
     return targetPosition;
   }
 
-  public void setStartPosition(Point coord) {
+  void setStartPosition(Point coord) {
     startPosition.setLocation(coord);
   }
 
-  public void setTargetPosition(Point coord) {
+  void setTargetPosition(Point coord) {
     targetPosition.setLocation(coord);
   }
 
-  public int getDimension() {
+  int getDimension() {
     return map.length;
   }
 
-  public void addToOpenNodes(Node n) {
+  void addToOpenNodes(Node n) {
     n.setOpen();
     openNodes.add(n);
   }
 
-  public Node popBestOpenNode() {
+  Node popBestOpenNode() {
     return openNodes.remove();
   }
 
-  public void addToClosedNodes(Node n) {
+  void addToClosedNodes(Node n) {
     n.setClosed();
     closedNodes.add(n);
   }
 
-  public boolean isInsideMap(Point p) {
+  boolean isInsideMap(Point p) {
     return ((p.getX() >= 0) && (p.getX() < getDimension()) && (p.getY() >= 0) && (p.getY() < getDimension()));
   }
 
-  public Set<Node> getNeighbours(Node n) {
+  Set<Node> getNeighbours(Node n) {
     Set<Node> neighbours = new HashSet<>();
     for (int i = -1; i <= 1; i++) {
       for (int j = -1; j <= 1; j++) {
@@ -88,7 +88,7 @@ public class SquareGraph {
     return Math.pow(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2), 0.5);
   }
 
-  public ArrayList<Node> reconstructPath(Node target) {
+  ArrayList<Node> reconstructPath(Node target) {
     ArrayList<Node> path = new ArrayList<>();
     Node current = target;
 
@@ -100,14 +100,14 @@ public class SquareGraph {
     return path;
   }
 
-  public void printPath(ArrayList<Node> path) {
+  void printPath(ArrayList<Node> path) {
     for (int i = 0; i < path.size(); i++) {
       Node node = path.get(i);
       System.out.println("node : (" + node.getX() + "," + node.getY() + ")");
     }
   }
 
-  public ArrayList<Node> executeAStar() {
+  ArrayList<Node> executeAStar() {
     Node start = getMapCell(getStartPosition());
     Node target = getMapCell(getTargetPosition());
     addToOpenNodes(start);

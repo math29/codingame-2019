@@ -1,0 +1,1 @@
+for f in ./src/main/java/com/player/*.java; do tail -n +2 "$f" >> player.java; done

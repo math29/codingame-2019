@@ -11,26 +11,27 @@ package com.player;
 
 import java.util.Scanner;
 
-class Entity {
-    private static final Coord DEAD_POS = new Coord(-1, -1);
+class Cell {
+    boolean known;
+    int ore;
+    boolean hole;
 
-    // Updated every turn
-    final int id;
-    final EntityType type;
-    final Coord pos;
-    final EntityType item;
-
-    // Computed for my robots
-    Action action;
-
-    Entity(Scanner in) {
-        id = in.nextInt();
-        type = EntityType.valueOf(in.nextInt());
-        pos = new Coord(in);
-        item = EntityType.valueOf(in.nextInt());
+    Cell(boolean known, int ore, boolean hole) {
+        this.known = known;
+        this.ore = ore;
+        this.hole = hole;
     }
 
-    boolean isAlive() {
-        return !DEAD_POS.equals(pos);
+    Cell(Scanner in) {
+        String oreStr = in.next();
+        if (oreStr.charAt(0) == '?') {
+            known = false;
+            ore = 0;
+        } else {
+            known = true;
+            ore = Integer.parseInt(oreStr);
+        }
+        String holeStr = in.next();
+        hole = (holeStr.charAt(0) != '0');
     }
 }

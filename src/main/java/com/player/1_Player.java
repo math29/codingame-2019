@@ -18,37 +18,30 @@ import java.math.*;
  **/
 
 class Player {
+
   public static void main(String args[]) {
-    Scanner in = new Scanner(System.in);
-    int width = in.nextInt();
-    int height = in.nextInt(); // size of the map
+    new Player().run();
+  }
 
-    // game loop
+  final Scanner in = new Scanner(System.in);
+
+  void run() {
+    // Parse initial conditions
+    Board board = new Board(in);
+
     while (true) {
-      int myScore = in.nextInt(); // Amount of ore delivered
-      int opponentScore = in.nextInt();
-      for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-          String ore = in.next(); // amount of ore or "?" if unknown
-          int hole = in.nextInt(); // 1 if cell has a hole
-        }
-      }
-      int entityCount = in.nextInt(); // number of entities visible to you
-      int radarCooldown = in.nextInt(); // turns left until a new radar can be requested
-      int trapCooldown = in.nextInt(); // turns left until a new trap can be requested
-      for (int i = 0; i < entityCount; i++) {
-        int id = in.nextInt(); // unique id of the entity
-        int type = in.nextInt(); // 0 for your robot, 1 for other robot, 2 for radar, 3 for trap
-        int x = in.nextInt();
-        int y = in.nextInt(); // position of the entity
-        int item = in.nextInt(); // if this entity is a robot, the item it is carrying (-1 for NONE, 2 for RADAR, 3 for TRAP, 4 for ORE)
-      }
-      for (int i = 0; i < 5; i++) {
+      // Parse current state of the game
+      board.update(in);
 
-        // Write an action using System.out.println()
-        // To debug: System.err.println("Debug messages...");
+      // Insert your strategy here
+      for (Entity robot : board.myTeam.robots) {
+        robot.action = Action.none();
+        robot.action.message = "Java Starter";
+      }
 
-        System.out.println("WAIT"); // WAIT|MOVE x y|DIG x y|REQUEST item
+      // Send your actions for this turn
+      for (Entity robot : board.myTeam.robots) {
+        System.out.println(robot.action);
       }
     }
   }

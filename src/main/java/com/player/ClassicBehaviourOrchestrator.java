@@ -19,8 +19,10 @@ class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
 
   @Override void setRobotBehaviours() {
     for (final Entity robot : board.myTeam.robots) {
-      this.behaviourMap.put(robot.id, null);
+      if (this.getNumberOfScouts() < 1) {
+        this.behaviourMap.put(robot.id, null);
+      }
+
     }
   }
-
 }

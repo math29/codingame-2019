@@ -32,7 +32,7 @@ class ScoutBehaviour extends EntityBehaviour {
             return Action.move(new Coord(x, y));
         }
 
-        // If Scout is with RADAR on the map, git it in the ground
+        // If Scout is with RADAR on the map, dig it in the ground
         if (entity.item == EntityType.RADAR
                 && (entity.pos.x >= 0 && entity.pos.x < board.width)
                 && (entity.pos.y >= 0 && entity.pos.y < board.height)) {
@@ -42,6 +42,6 @@ class ScoutBehaviour extends EntityBehaviour {
         }
 
         // Return to headquarters for the new RADAR
-        return Action.move(new Coord(0,0));
+        return Action.move(getCloserHeadQuarterCell().coord);
     }
 }

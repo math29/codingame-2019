@@ -22,46 +22,20 @@ class BomberBehaviour extends EntityBehaviour {
       return returnAction(Action.request(EntityType.TRAP));
     }
 
-    // If Bomber is with TRAP in trap safe zone, dig it in the ground
+    Cell closestOreCell = this.getCloserOreCell();
+
     if (entity.item == EntityType.TRAP
-            && isInsideRadarOrTrapZone()
-            && isCoordOutsideTrapCoverrage(entity.pos)
+        && (closestOreCell == null || closestOreCell.coord.distance(entity.pos) <= 2)
             && !isCellBad(board.getCell(entity.pos))) {
-      return returnAction(Action.dig(new Coord(entity.pos.x, entity.pos.y)));
+      return returnAction(Action.dig(closestOreCell.coord));
     }
 
     // move
     if (entity.item == EntityType.TRAP) {
-      Coord randomFreeCoord = getNextTrapTarget(
-              5,
-              board.getWidth() - 3,
-              4,
-              board.getHeight() - 3,
-              0);
-      return returnAction(Action.move(randomFreeCoord));
+      return returnAction(Action.move(closestOreCell.coord));
     }
 
     // Return to headquarters for the new RADAR
     return returnAction(Action.move(getCloserHeadQuarterCell().coord));
-  }
-
-  private Coord getNextTrapTarget(int startX, int endX, int startY, int endY, int deep) {
-    Coord coord = getRandomCoord(startX, endX, startY, endY);
-    if (isCoordOutsideTrapCoverrage(coord)
-            && !isCellBad(board.getCell(coord))){
-      return coord;
-    } else {
-      // Should not happen
-      if (deep >= 30) {
-        return new Coord(0, 0);
-      }
-      return getNextTrapTarget(startX, endX, startY, endY, deep + 1);
-    }
-  }
-
-  private boolean isCoordOutsideTrapCoverrage(final Coord coord) {
-    return this.board.myTrapPos.stream()
-            .noneMatch(rCoord ->
-                    isInside(rCoord.x, rCoord.y, 2, coord.x, coord.y));
   }
 }

@@ -75,6 +75,10 @@ class Board {
         return Arrays.asList(flattenStream(this.cells).toArray(Cell[]::new));
     }
 
+    List<Cell> getHeadQuarterCells() {
+        return Arrays.asList(this.cells[0]);
+    }
+
     private static <T> Stream<T> flattenStream(T[][] arrays) {
         List<T> list = new ArrayList<>();
         for (T[] array : arrays) {

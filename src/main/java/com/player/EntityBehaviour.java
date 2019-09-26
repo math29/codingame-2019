@@ -21,7 +21,7 @@ abstract class EntityBehaviour {
 
   abstract Action getNextAction();
 
-  protected Cell getCloserOreCell() {
+  Cell getCloserOreCell() {
     Cell closerCell = board.getCell(new Coord(15, 8));
     int minDistance = 50;
     for (final Cell cell : board.getCells()) {
@@ -34,7 +34,16 @@ abstract class EntityBehaviour {
     return closerCell;
   }
 
-//  protected Cell getCloserHeadQuarterCell() {
-//
-//  }
+  Cell getCloserHeadQuarterCell() {
+    Cell closerCell = board.getCell(new Coord(15, 8));
+    int minDistance = 50;
+    for (final Cell cell : board.getHeadQuarterCells()) {
+      int distance = cell.coord.distance(this.entity.pos);
+      if (distance < minDistance) {
+        closerCell = cell;
+        minDistance = distance;
+      }
+    }
+    return closerCell;
+  }
 }

@@ -66,11 +66,11 @@ class Player {
       }
 
       // Run Behaviour assignements
-      BehaviourOrchestrator behaviourOrchestrator = new ClassicBehaviourOrchestrator(board);
-      behaviourOrchestrator.setRobotBehaviours();
-      for (EntityBehaviour behaviour : behaviourOrchestrator.behaviourMap.values()) {
-        System.out.println(behaviour.getNextAction());
-      }
+//      BehaviourOrchestrator behaviourOrchestrator = new ClassicBehaviourOrchestrator(board);
+//      behaviourOrchestrator.setRobotBehaviours();
+//      for (EntityBehaviour behaviour : behaviourOrchestrator.behaviourMap.values()) {
+//        System.out.println(behaviour.getNextAction());
+//      }
     }
   }
 }

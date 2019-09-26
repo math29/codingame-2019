@@ -60,8 +60,8 @@ abstract class EntityBehaviour {
 
   private Coord getRandomCoord() {
     Random randomGenerator = new Random();
-    int x = randomGenerator.nextInt(board.getHeight());
-    int y = randomGenerator.nextInt(board.getWidth());
+    int x = randomGenerator.nextInt(board.getWidth());
+    int y = randomGenerator.nextInt(board.getHeight());
     return new Coord(x, y);
   }
 

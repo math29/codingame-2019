@@ -1,8 +1,5 @@
 package com.player;
 
-import java.util.HashMap;
-import java.util.Map;
-
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -12,24 +9,18 @@ import java.util.Map;
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 
-abstract class BehaviourOrchestrator {
+class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
 
-  Map<Integer, EntityBehaviour> behaviourMap;
+  private Board board;
 
-  protected Board board;
-
-  BehaviourOrchestrator(final Board board) {
-    this.board = board;
-    behaviourMap = new HashMap<>();
+  ClassicBehaviourOrchestrator(final Board board) {
+    super(board);
   }
 
-  abstract void setRobotBehaviours();
+  @Override void setRobotBehaviours() {
+    for (final Entity robot : board.myTeam.robots) {
+      this.behaviourMap.put(robot.id, null);
+    }
+  }
 
-//  protected int getNumberOfMiners() {
-//    this.behaviourMap.values().stream().filter(entityBehaviour -> instanceof)
-//  }
-
-//  protected int getNumberOfScouts() {
-
-//  }
 }

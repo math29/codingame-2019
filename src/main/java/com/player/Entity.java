@@ -33,4 +33,8 @@ class Entity {
     boolean isAlive() {
         return !DEAD_POS.equals(pos);
     }
+
+    boolean isAtHeadquarters() {
+        return pos.y == 0;
+    }
 }

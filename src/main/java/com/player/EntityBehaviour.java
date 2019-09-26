@@ -24,7 +24,7 @@ abstract class EntityBehaviour {
   abstract Action getNextAction();
 
   Cell getCloserOreCell() {
-    Cell closerCell = board.getCell(this.getRandomSafeCoord());
+    Cell closerCell = board.getCell(this.getRandomSafeCoord(0, board.getWidth(), 0, board.getHeight()));
     int minDistance = 50;
     for (final Cell cell : board.getCells()) {
       int distance = cell.coord.distance(this.entity.pos);
@@ -47,10 +47,6 @@ abstract class EntityBehaviour {
       }
     }
     return closerCell;
-  }
-
-  Coord getRandomSafeCoord() {
-    return getRandomSafeCoord(0, board.getWidth(), 0, board.getHeight());
   }
 
   Coord getRandomSafeCoord(int startX, int endX, int startY, int endY) {
@@ -80,6 +76,9 @@ abstract class EntityBehaviour {
   }
 
   protected boolean isCellBad(final Cell cell) {
+    if(board.myTrapPos.isEmpty()){
+      return false;
+    }
     Coord cellOptional = board.myTrapPos.parallelStream()
         .filter(trapCoord -> trapCoord.x == cell.coord.x && trapCoord.y == cell.coord.y).findFirst()
         .orElse(null);

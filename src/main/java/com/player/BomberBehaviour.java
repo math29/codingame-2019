@@ -19,11 +19,11 @@ class BomberBehaviour extends EntityBehaviour {
   }
 
   @Override Action getNextAction() {
-    Coord randomCoord = getRandomSafeCoord();
+    Coord randomCoord = getRandomSafeCoord(0, board.getWidth(), 0, board.getHeight());
     if (entity.isAtHeadquarters() && !entity.hasItem()) {
-      return Action.request(EntityType.TRAP).withMessage(NAME);
+      return Action.request(EntityType.TRAP);
     } else if (entity.isAtHeadquarters() && entity.item.equals(EntityType.TRAP) && board.getCell(randomCoord).hasOre()) {
-      return Action.move(randomCoord).withMessage(NAME);
+      return Action.move(randomCoord);
     } else if (entity.isAtHeadquarters() && entity.item.equals(EntityType.TRAP) && !board.getCell(randomCoord).hasOre()) {
       getNextAction();
     } else if (entity.item == EntityType.TRAP) {

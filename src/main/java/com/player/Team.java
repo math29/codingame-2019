@@ -1,5 +1,9 @@
 package com.player;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Scanner;
+
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -11,7 +15,6 @@ package com.player;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Scanner;
 
 class Team {
     int score;

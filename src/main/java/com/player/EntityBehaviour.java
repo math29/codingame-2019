@@ -41,6 +41,7 @@ abstract class EntityBehaviour {
     return closerCell;
   }
 
+
   Cell getCloserHeadQuarterCell() {
     Cell closerCell = board.getCell(new Coord(0, 0));
     int minDistance = 50;

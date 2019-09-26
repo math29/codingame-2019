@@ -1,5 +1,7 @@
 package com.player;
 
+import java.util.stream.Collectors;
+
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -23,7 +25,8 @@ class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
     for (final Entity robot : board.myTeam.robots) {
       if (this.behaviourMap.get(robot.id) == null) {
         if (this.getNumberOfScouts() < 1
-            && board.myRadarPos.size() < NUMBER_OF_RADARS_MAX) {
+            && board.myRadarPos.size() < NUMBER_OF_RADARS_MAX
+            && board.getCells().stream().noneMatch(cell -> cell.hasOre() && !isCellBad(cell))) {
           this.behaviourMap.put(robot.id, new ScoutBehaviour(robot, board));
         } else if (this.getNumberOfBombers() < 1
             && board.myTrapPos.size() < NUMBER_OF_TRAPS_MAX) {
@@ -33,5 +36,15 @@ class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
         }
       }
     }
+  }
+
+  private boolean isCellBad(final Cell cell) {
+    if(board.myTrapPos.isEmpty()){
+      return false;
+    }
+    Coord cellOptional = board.myTrapPos.parallelStream()
+        .filter(trapCoord -> trapCoord.x == cell.coord.x && trapCoord.y == cell.coord.y).findFirst()
+        .orElse(null);
+    return cellOptional != null;
   }
 }

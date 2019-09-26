@@ -22,7 +22,7 @@ class BomberBehaviour extends EntityBehaviour {
       return returnAction(Action.request(EntityType.TRAP));
     }
 
-    Cell closestOreCell = this.getCloserOreCell();
+    Cell closestOreCell = this.getCloserJuicyOreCell();
 
     if (entity.item == EntityType.TRAP
         && (closestOreCell == null || closestOreCell.coord.distance(entity.pos) <= 2)
@@ -37,5 +37,21 @@ class BomberBehaviour extends EntityBehaviour {
 
     // Return to headquarters for the new RADAR
     return returnAction(Action.move(getCloserHeadQuarterCell().coord));
+  }
+
+  Cell getCloserJuicyOreCell() {
+    Cell closerCell = null;
+    int minDistance = 50;
+    for (final Cell cell : board.getCells()) {
+      int distance = cell.coord.distance(this.entity.pos);
+      if (cell.ore > 1 && distance < minDistance && !isCellBad(cell)) {
+        closerCell = cell;
+        minDistance = distance;
+      }
+    }
+    if (closerCell == null) {
+      return this.getCloserOreCell();
+    }
+    return closerCell;
   }
 }

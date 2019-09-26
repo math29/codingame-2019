@@ -20,6 +20,18 @@ class ScoutBehaviour extends EntityBehaviour {
     }
 
     @Override Action getNextAction() {
+        List<Coord> fixedCoord = new ArrayList<>();
+        fixedCoord.add(new Coord(8, 4));
+        fixedCoord.add(new Coord(8, 9));
+        fixedCoord.add(new Coord(16, 4));
+        fixedCoord.add(new Coord(16, 9));
+        fixedCoord.add(new Coord(24, 4));
+        fixedCoord.add(new Coord(24, 9));
+        Coord coordToUse = fixedCoord.stream()
+            .filter(c -> !board.getCell(c).known)
+            .findFirst()
+            .orElse(new Coord(0,0));
+
         // If Scout is at the headquarters and carries nothing, take RADAR
         if (entity.isAtHeadquarters() && entity.item == EntityType.NOTHING) {
             return returnAction(Action.request(EntityType.RADAR));
@@ -27,33 +39,13 @@ class ScoutBehaviour extends EntityBehaviour {
 
         // If Scout is with RADAR in radar safe zone, dig it in the ground
         if (entity.item == EntityType.RADAR
-            && isInsideRadarOrTrapZone()
-           // && isCoordOutsideRadarCoverrage(entity.pos)
-            && !isCellBad(board.getCell(entity.pos))) {
-            return returnAction(Action.dig(new Coord(entity.pos.x, entity.pos.y)));
+            && coordToUse.distance(entity.pos) <= 2
+            && !isCellBad(board.getCell(coordToUse))) {
+            return returnAction(Action.dig(coordToUse));
         }
 
         // move
         if (entity.item == EntityType.RADAR) {
-            List<Coord> fixedCoord = new ArrayList<>();
-            fixedCoord.add(new Coord(8, 4));
-            fixedCoord.add(new Coord(16, 4));
-            fixedCoord.add(new Coord(24, 4));
-            fixedCoord.add(new Coord(8, 9));
-            fixedCoord.add(new Coord(16, 9));
-            fixedCoord.add(new Coord(24, 9));
-
-            Coord coordToUse = fixedCoord.stream()
-                    .filter(c -> !board.getCell(c).known)
-                    .findFirst()
-                    .orElse(new Coord(0,0));
-
-            /*Coord randomFreeCoord = getNextRadarTarget(
-                5,
-                board.getWidth() - 3,
-                4,
-                board.getHeight() - 3,
-                0);*/
             return returnAction(Action.move(coordToUse));
         }
 

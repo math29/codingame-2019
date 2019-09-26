@@ -64,14 +64,13 @@ class Player {
       for (Entity robot : board.myTeam.robots) {
         System.out.println(robot.action);
       }
+
+      // Run Behaviour assignements
+      BehaviourOrchestrator behaviourOrchestrator = new ClassicBehaviourOrchestrator(board);
+      behaviourOrchestrator.setRobotBehaviours();
+      for (EntityBehaviour behaviour : behaviourOrchestrator.behaviourMap.values()) {
+        System.out.println(behaviour.getNextAction());
+      }
     }
   }
-
-  // Run Behaviour assignements
-//  BehaviourOrchestrator behaviourOrchestrator = new ClassicBehaviourOrchestrator(board);
-//      behaviourOrchestrator.setRobotBehaviours();
-//  // Insert your strategy here
-//      for (EntityBehaviour behaviour : behaviourOrchestrator.behaviourMap.values()) {
-//    System.out.println(behaviour.getNextAction());
-//  }
 }

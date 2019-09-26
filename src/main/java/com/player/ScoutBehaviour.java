@@ -23,10 +23,11 @@ class ScoutBehaviour extends EntityBehaviour {
             return Action.request(EntityType.RADAR).withMessage(NAME);
         }
 
-        // If Scout is with RADAR on the map in radar safe zone, dig it in the ground
+        // If Scout is with RADAR in radar safe zone, dig it in the ground
         if (entity.item == EntityType.RADAR
             && isInsideRadarZone()
-            && isCoordOutsideRadarCoverrage(entity.pos)) {
+            && isCoordOutsideRadarCoverrage(entity.pos)
+            && !isCellBad(board.getCell(entity.pos))) {
             return Action.dig(new Coord(entity.pos.x + 1, entity.pos.y)).withMessage(NAME);
         }
 

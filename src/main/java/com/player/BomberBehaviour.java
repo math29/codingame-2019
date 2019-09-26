@@ -19,18 +19,46 @@ class BomberBehaviour extends EntityBehaviour {
   }
 
   @Override Action getNextAction() {
-    Coord randomCoord = getRandomSafeCoord(0, board.getWidth(), 0, board.getHeight());
-    if (entity.isAtHeadquarters() && !entity.hasItem()) {
-      return Action.request(EntityType.TRAP);
-    } else if (entity.isAtHeadquarters() && entity.item.equals(EntityType.TRAP) && board.getCell(randomCoord).hasOre()) {
-      return Action.move(randomCoord);
-    } else if (entity.isAtHeadquarters() && entity.item.equals(EntityType.TRAP) && !board.getCell(randomCoord).hasOre()) {
-      getNextAction();
-    } else if (entity.item == EntityType.TRAP) {
-      return Action.dig(entity.pos).withMessage(NAME);
-    } else {
-      return Action.move(getCloserHeadQuarterCell().coord).withMessage(NAME);
+    // If Bomber is at the headquarters and carries nothing, take TRAP
+    if (entity.isAtHeadquarters() && entity.item == EntityType.NOTHING) {
+      return Action.request(EntityType.TRAP).withMessage(NAME);
     }
-    return null;
+
+    // If Bomer is with TRAP in trap safe zone, dig it in the ground
+    if (entity.item == EntityType.TRAP
+            && isInsideRadarOrTrapZone()
+            && isCoordOutsideTrapCoverrage(entity.pos)
+            && !isCellBad(board.getCell(entity.pos))) {
+      return Action.dig(new Coord(entity.pos.x + 1, entity.pos.y)).withMessage(NAME);
+    }
+
+    // move
+    if (entity.item == EntityType.TRAP) {
+      Coord randomFreeCoord = getNextTrapTarget(
+              5,
+              board.getWidth() - 3,
+              4,
+              board.getHeight() - 3);
+      return Action.move(randomFreeCoord).withMessage(NAME);
+    }
+
+    // Return to headquarters for the new RADAR
+    return Action.move(getCloserHeadQuarterCell().coord).withMessage(NAME);
+  }
+
+  private Coord getNextTrapTarget(int startX, int endX, int startY, int endY) {
+    Coord coord = getRandomCoord(startX, endX, startY, endY);
+    if (isCoordOutsideTrapCoverrage(coord)
+            && !isCellBad(board.getCell(coord))){
+      return coord;
+    } else {
+      return getNextTrapTarget(startX, endX, startY, endY);
+    }
+  }
+
+  private boolean isCoordOutsideTrapCoverrage(final Coord coord) {
+    return this.board.myTrapPos.stream()
+            .noneMatch(rCoord ->
+                    isInside(rCoord.x, rCoord.y, 4, coord.x, coord.y));
   }
 }

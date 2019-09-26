@@ -14,6 +14,7 @@ import java.io.*;
 import java.math.*;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import java.util.concurrent.Callable;
 
 /**
  * Deliver more ore to hq (left side of the map) than your opponent. Use radars to find ore but beware of traps!

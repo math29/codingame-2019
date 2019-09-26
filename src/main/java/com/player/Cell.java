@@ -37,11 +37,11 @@ class Cell {
         hole = (holeStr.charAt(0) != '0');
     }
 
-    Boolean hasOre() {
+    boolean hasOre() {
         return this.ore > 0;
     }
 
-    Boolean hasHole() {
+    boolean hasHole() {
         return this.hole;
     }
 }

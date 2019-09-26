@@ -99,12 +99,9 @@ abstract class EntityBehaviour {
   }
 
   boolean isCellRadarFree(final Cell cell) {
-    final AtomicReference<Boolean> isCellWithRadar = new AtomicReference<>(false);
-    board.myRadarPos.forEach(radarCoord -> {
-      if (!cell.known && radarCoord.x == cell.coord.x && radarCoord.y == cell.coord.y) {
-        isCellWithRadar.set(true);
-      }
-    });
-    return isCellWithRadar.get();
+    Coord cellOptional = board.myRadarPos.parallelStream()
+            .filter(coord -> coord.x == cell.coord.x && coord.y == cell.coord.y).findFirst()
+            .orElse(null);
+    return cellOptional != null;
   }
 }

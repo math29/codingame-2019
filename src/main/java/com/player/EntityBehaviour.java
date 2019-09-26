@@ -102,6 +102,6 @@ abstract class EntityBehaviour {
     Coord cellOptional = board.myRadarPos.parallelStream()
             .filter(coord -> coord.x == cell.coord.x && coord.y == cell.coord.y).findFirst()
             .orElse(null);
-    return cellOptional != null;
+    return cellOptional == null;
   }
 }

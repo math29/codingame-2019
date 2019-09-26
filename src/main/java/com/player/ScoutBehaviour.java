@@ -49,7 +49,7 @@ class ScoutBehaviour extends EntityBehaviour {
             && !isCellBad(board.getCell(coord))){
             return coord;
         } else {
-            return getRandomCoord(startX, endX, startY, endY);
+            return getNextRadarTarget(startX, endX, startY, endY);
         }
     }
 

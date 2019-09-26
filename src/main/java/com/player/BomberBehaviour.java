@@ -18,7 +18,7 @@ class BomberBehaviour extends EntityBehaviour {
   }
 
   @Override Action getNextAction() {
-    Coord randomCoord = getRandomSafeCoord();
+    Coord randomCoord = getRandomSafeCoord(0, board.getWidth(), 0, board.getHeight());
     if (robot.isAtHeadquarters() && !robot.hasItem()) {
       return Action.request(EntityType.TRAP);
     } else if (robot.isAtHeadquarters() && robot.item.equals(EntityType.TRAP) && board.getCell(randomCoord).hasOre()) {

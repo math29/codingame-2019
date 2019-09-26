@@ -63,9 +63,8 @@ class ScoutBehaviour extends EntityBehaviour {
     }
 
     private boolean isCoordOutsideRadarCoverrage(final Coord coord) {
-        return
-            this.board.myRadarPos.stream()
-                    .noneMatch(rCoord ->
-                            isInside(rCoord.x, rCoord.y, 4, coord.x, coord.y));
+        return this.board.myRadarPos.stream()
+                .noneMatch(rCoord ->
+                        isInside(rCoord.x, rCoord.y, 4, coord.x, coord.y));
     }
 }

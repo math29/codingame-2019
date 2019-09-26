@@ -63,17 +63,7 @@ abstract class EntityBehaviour {
     }
   }
 
-  Coord getRandomSafeAndRadarFreeCoord(int startX, int endX, int startY, int endY) {
-    Coord coord = getRandomCoord(startX, endX, startY, endY);
-    if(!isCellRadarFree(board.getCell(coord))
-            && !isCellBad(board.getCell(coord))){
-      return coord;
-    } else {
-      return getRandomSafeCoord();
-    }
-  }
-
-  private Coord getRandomCoord(int startX, int endX, int startY, int endY) {
+  protected Coord getRandomCoord(int startX, int endX, int startY, int endY) {
     int x = ThreadLocalRandom.current().nextInt(startX, endX);
     int y = ThreadLocalRandom.current().nextInt(startY, endY);
     return new Coord(x, y);
@@ -90,7 +80,7 @@ abstract class EntityBehaviour {
 
   }
 
-  private boolean isCellBad(final Cell cell) {
+  protected boolean isCellBad(final Cell cell) {
     final AtomicReference<Boolean> isCellBad = new AtomicReference<>(false);
     board.myTrapPos.forEach(trapCoord -> {
       if(!cell.known && trapCoord.x == cell.coord.x && trapCoord.y == cell.coord.y){

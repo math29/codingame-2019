@@ -48,12 +48,12 @@ class ScoutBehaviour extends EntityBehaviour {
     private Coord getNextRadarTarget(int startX, int endX, int startY, int endY, int deep) {
         Coord coord = getRandomCoord(startX, endX, startY, endY);
         if (isCoordOutsideRadarCoverrage(coord)
-            && !isCellBad(board.getCell(coord)) && board.getCell(coord).hasOre()){
+            && !isCellBad(board.getCell(coord))){
             return coord;
         } else {
             // Should not happen
             if (deep >= 30) {
-                return new Coord(0, 0);
+                return coord;
             }
             return getNextRadarTarget(startX, endX, startY, endY, deep+1);
         }

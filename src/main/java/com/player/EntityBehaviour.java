@@ -98,7 +98,7 @@ abstract class EntityBehaviour {
     return cellOptional != null;
   }
 
-  private boolean isCellRadarFree(final Cell cell) {
+  boolean isCellRadarFree(final Cell cell) {
     final AtomicReference<Boolean> isCellWithRadar = new AtomicReference<>(false);
     board.myRadarPos.forEach(radarCoord -> {
       if (!cell.known && radarCoord.x == cell.coord.x && radarCoord.y == cell.coord.y) {

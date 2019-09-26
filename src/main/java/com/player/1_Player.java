@@ -59,6 +59,10 @@ class Player {
           EntityBehaviour behaviour = new MinerBehaviour(robot, board);
           robot.action = behaviour.getNextAction();
           robot.action.message = "Miner Robot";
+        } else if (index == 2) {
+          EntityBehaviour behaviour = new BomberBehaviour(robot, board);
+          robot.action = behaviour.getNextAction();
+          robot.action.message = "Bomber Robot";
         } else {
           robot.action = Action.none();
           robot.action.message = "Java Starter";

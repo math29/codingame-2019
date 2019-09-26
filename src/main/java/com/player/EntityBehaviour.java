@@ -54,21 +54,11 @@ abstract class EntityBehaviour {
   }
 
   Coord getRandomSafeCoord(int startX, int endX, int startY, int endY) {
-    Coord coord = getRandomCoord(startX, endX, startY, endY);
+    Coord coord = getRandomSafeCoord(startX, endX, startY, endY);
     if (!isCellBad(board.getCell(coord))) {
       return coord;
     } else {
-      return getRandomSafeCoord();
-    }
-  }
-
-  Coord getRandomSafeAndRadarFreeCoord(int startX, int endX, int startY, int endY) {
-    Coord coord = getRandomCoord(startX, endX, startY, endY);
-    if (!isCellRadarFree(board.getCell(coord))
-        && !isCellBad(board.getCell(coord))) {
-      return coord;
-    } else {
-      return getRandomSafeCoord();
+      return getRandomSafeCoord(startX, endX, startY, endY);
     }
   }
 

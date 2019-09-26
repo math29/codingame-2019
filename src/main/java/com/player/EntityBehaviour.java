@@ -3,6 +3,7 @@ package com.player;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -50,7 +51,11 @@ abstract class EntityBehaviour {
   }
 
   Coord getRandomSafeCoord() {
-    Coord coord = getRandomCoord();
+    return getRandomSafeCoord(0, board.getWidth(), 0, board.getHeight());
+  }
+
+  Coord getRandomSafeCoord(int startX, int endX, int startY, int endY) {
+    Coord coord = getRandomCoord(startX, endX, startY, endY);
     if(!isCellBad(board.getCell(coord))){
       return coord;
     } else {
@@ -58,10 +63,9 @@ abstract class EntityBehaviour {
     }
   }
 
-  private Coord getRandomCoord() {
-    Random randomGenerator = new Random();
-    int x = randomGenerator.nextInt(board.getWidth());
-    int y = randomGenerator.nextInt(board.getHeight());
+  private Coord getRandomCoord(int startX, int endX, int startY, int endY) {
+    int x = ThreadLocalRandom.current().nextInt(startX, endX);
+    int y = ThreadLocalRandom.current().nextInt(startY, endY);
     return new Coord(x, y);
   }
 

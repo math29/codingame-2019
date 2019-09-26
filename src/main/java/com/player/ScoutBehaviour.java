@@ -21,12 +21,12 @@ class ScoutBehaviour extends EntityBehaviour {
 
     @Override Action getNextAction() {
         List<Coord> fixedCoord = new ArrayList<>();
-        fixedCoord.add(new Coord(8, 4));
-        fixedCoord.add(new Coord(8, 9));
-        fixedCoord.add(new Coord(16, 4));
-        fixedCoord.add(new Coord(16, 9));
+        fixedCoord.add(new Coord(5, 4));
+        fixedCoord.add(new Coord(5, 10));
+        fixedCoord.add(new Coord(11, 8));
+        fixedCoord.add(new Coord(16, 10));
         fixedCoord.add(new Coord(24, 4));
-        fixedCoord.add(new Coord(24, 9));
+        fixedCoord.add(new Coord(24, 10));
         Coord coordToUse = fixedCoord.stream()
             .filter(c -> !board.getCell(c).known)
             .findFirst()

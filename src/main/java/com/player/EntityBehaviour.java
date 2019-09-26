@@ -15,7 +15,7 @@ abstract class EntityBehaviour {
 
   protected Entity entity;
   protected Board board;
-  protected static String NAME;
+  protected String NAME;
 
   EntityBehaviour(final Entity entity, final Board board) {
     this.entity = entity;
@@ -24,8 +24,8 @@ abstract class EntityBehaviour {
 
   abstract Action getNextAction();
 
-  static Action returnAction(final Action action) {
-    return action.withMessage(EntityBehaviour.NAME);
+  Action returnAction(final Action action) {
+    return action.withMessage(this.NAME);
   }
 
   Cell getCloserOreCell() {

@@ -11,10 +11,9 @@ package com.player;
 
 class ScoutBehaviour extends EntityBehaviour {
 
-    protected static final String NAME = "Scout";
-
     ScoutBehaviour(final Entity entity, final Board board) {
         super(entity, board);
+        this.NAME = "Scout";
     }
 
     @Override Action getNextAction() {
@@ -37,7 +36,8 @@ class ScoutBehaviour extends EntityBehaviour {
                 5,
                 board.getWidth() - 3,
                 4,
-                board.getHeight() - 3);
+                board.getHeight() - 3,
+                0);
             return returnAction(Action.move(randomFreeCoord));
         }
 
@@ -45,13 +45,16 @@ class ScoutBehaviour extends EntityBehaviour {
         return returnAction(Action.move(getCloserHeadQuarterCell().coord));
     }
 
-    private Coord getNextRadarTarget(int startX, int endX, int startY, int endY) {
+    private Coord getNextRadarTarget(int startX, int endX, int startY, int endY, int deep) {
         Coord coord = getRandomCoord(startX, endX, startY, endY);
         if (isCoordOutsideRadarCoverrage(coord)
             && !isCellBad(board.getCell(coord))){
             return coord;
         } else {
-            return getNextRadarTarget(startX, endX, startY, endY);
+            if (deep >= 30) {
+                return new Coord(0, 0);
+            }
+            return getNextRadarTarget(startX, endX, startY, endY, deep+1);
         }
     }
 

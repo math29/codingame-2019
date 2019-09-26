@@ -11,11 +11,9 @@ package com.player;
 
 class BomberBehaviour extends EntityBehaviour {
 
-  protected static final String NAME = "Bomber";
-
   BomberBehaviour(final Entity robot, final Board board) {
     super(robot, board);
-    this.board = board;
+    this.NAME = "Bomber";
   }
 
   @Override Action getNextAction() {
@@ -38,7 +36,8 @@ class BomberBehaviour extends EntityBehaviour {
               5,
               board.getWidth() - 3,
               4,
-              board.getHeight() - 3);
+              board.getHeight() - 3,
+              0);
       return returnAction(Action.move(randomFreeCoord));
     }
 
@@ -46,13 +45,16 @@ class BomberBehaviour extends EntityBehaviour {
     return returnAction(Action.move(getCloserHeadQuarterCell().coord));
   }
 
-  private Coord getNextTrapTarget(int startX, int endX, int startY, int endY) {
+  private Coord getNextTrapTarget(int startX, int endX, int startY, int endY, int deep) {
     Coord coord = getRandomCoord(startX, endX, startY, endY);
     if (isCoordOutsideTrapCoverrage(coord)
             && !isCellBad(board.getCell(coord))){
       return coord;
     } else {
-      return getNextTrapTarget(startX, endX, startY, endY);
+      if (deep >= 30) {
+        return new Coord(0, 0);
+      }
+      return getNextTrapTarget(startX, endX, startY, endY, deep + 1);
     }
   }
 

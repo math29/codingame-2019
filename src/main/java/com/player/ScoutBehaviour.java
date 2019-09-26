@@ -36,9 +36,7 @@ class ScoutBehaviour extends EntityBehaviour {
         }
 
         // If Scout is with RADAR on the map, dig it in the ground
-        if (entity.item == EntityType.RADAR
-                && (entity.pos.x >= 0 && entity.pos.x < board.width)
-                && (entity.pos.y >= 0 && entity.pos.y < board.height)) {
+        if (entity.item == EntityType.RADAR && isCellRadarFree(board.getCell(entity.pos))) {
             int xToDig = entity.pos.x == (board.width-1) ? entity.pos.x-1 : entity.pos.x+1;
             int yToDig = entity.pos.y == (board.height-1) ? entity.pos.x-1 : entity.pos.x+1;
             return Action.dig(new Coord(xToDig, yToDig));

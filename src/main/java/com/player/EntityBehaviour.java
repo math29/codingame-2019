@@ -15,6 +15,7 @@ abstract class EntityBehaviour {
 
   protected Entity entity;
   protected Board board;
+  protected static String NAME;
 
   EntityBehaviour(final Entity entity, final Board board) {
     this.entity = entity;
@@ -22,6 +23,10 @@ abstract class EntityBehaviour {
   }
 
   abstract Action getNextAction();
+
+  static Action returnAction(final Action action) {
+    return action.withMessage(EntityBehaviour.NAME);
+  }
 
   Cell getCloserOreCell() {
     Cell closerCell = board.getCell(this.getRandomSafeCoord(0, board.getWidth(), 0, board.getHeight()));

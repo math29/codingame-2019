@@ -20,7 +20,7 @@ class ScoutBehaviour extends EntityBehaviour {
     @Override Action getNextAction() {
         // If Scout is at the headquarters and carries nothing, take RADAR
         if (entity.isAtHeadquarters() && entity.item == EntityType.NOTHING) {
-            return Action.request(EntityType.RADAR).withMessage(NAME);
+            return returnAction(Action.request(EntityType.RADAR));
         }
 
         // If Scout is with RADAR in radar safe zone, dig it in the ground
@@ -28,7 +28,7 @@ class ScoutBehaviour extends EntityBehaviour {
             && isInsideRadarZone()
             && isCoordOutsideRadarCoverrage(entity.pos)
             && !isCellBad(board.getCell(entity.pos))) {
-            return Action.dig(new Coord(entity.pos.x + 1, entity.pos.y)).withMessage(NAME);
+            return returnAction(Action.dig(new Coord(entity.pos.x + 1, entity.pos.y)));
         }
 
         // move
@@ -38,11 +38,11 @@ class ScoutBehaviour extends EntityBehaviour {
                 board.getWidth() - 3,
                 4,
                 board.getHeight() - 3);
-            return Action.move(randomFreeCoord).withMessage(NAME);
+            return returnAction(Action.move(randomFreeCoord));
         }
 
         // Return to headquarters for the new RADAR
-        return Action.move(getCloserHeadQuarterCell().coord).withMessage(NAME);
+        return returnAction(Action.move(getCloserHeadQuarterCell().coord));
     }
 
     private Coord getNextRadarTarget(int startX, int endX, int startY, int endY) {

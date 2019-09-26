@@ -25,10 +25,10 @@ class MinerBehaviour extends EntityBehaviour {
     } else {
       targetCoord = this.getCloserOreCell().coord;
       if (targetCoord.distance(entity.pos) <= 1) {
-        return Action.dig(targetCoord).withMessage(NAME);
+        return returnAction(Action.dig(targetCoord));
       }
     }
-    return Action.move(targetCoord);
+    return returnAction(Action.move(targetCoord));
     // @TODO: Set If no ore anymore, set Entity taken as empty
   }
 }

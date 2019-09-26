@@ -64,6 +64,16 @@ abstract class EntityBehaviour {
     }
   }
 
+  Coord getRandomSafeAndRadarFreeCoord(int startX, int endX, int startY, int endY) {
+    Coord coord = getRandomCoord(startX, endX, startY, endY);
+    if(!isCellRadarFree(board.getCell(coord))
+            && !isCellBad(board.getCell(coord))){
+      return coord;
+    } else {
+      return getRandomSafeCoord();
+    }
+  }
+
   private Coord getRandomCoord(int startX, int endX, int startY, int endY) {
     int x = ThreadLocalRandom.current().nextInt(startX, endX);
     int y = ThreadLocalRandom.current().nextInt(startY, endY);
@@ -85,4 +95,7 @@ abstract class EntityBehaviour {
     return !cell.known && board.myTrapPos.contains(cell);
   }
 
+  private boolean isCellRadarFree(final Cell cell) {
+    return board.myRadarPos.contains(cell);
+  }
 }

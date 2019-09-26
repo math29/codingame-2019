@@ -12,9 +12,6 @@ import java.util.List;
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 
-import java.util.ArrayList;
-import java.util.List;
-
 class ScoutBehaviour extends EntityBehaviour {
 
     ScoutBehaviour(final Entity entity, final Board board) {

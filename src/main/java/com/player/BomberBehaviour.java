@@ -11,7 +11,7 @@ package com.player;
 
 class BomberBehaviour extends EntityBehaviour {
 
-  private static final String NAME = "Bomber";
+  protected static final String NAME = "Bomber";
 
   BomberBehaviour(final Entity robot, final Board board) {
     super(robot, board);
@@ -21,7 +21,7 @@ class BomberBehaviour extends EntityBehaviour {
   @Override Action getNextAction() {
     // If Bomber is at the headquarters and carries nothing, take TRAP
     if (entity.isAtHeadquarters() && entity.item == EntityType.NOTHING) {
-      return Action.request(EntityType.TRAP).withMessage(NAME);
+      return returnAction(Action.request(EntityType.TRAP));
     }
 
     // If Bomer is with TRAP in trap safe zone, dig it in the ground
@@ -29,7 +29,7 @@ class BomberBehaviour extends EntityBehaviour {
             && isInsideRadarOrTrapZone()
             && isCoordOutsideTrapCoverrage(entity.pos)
             && !isCellBad(board.getCell(entity.pos))) {
-      return Action.dig(new Coord(entity.pos.x + 1, entity.pos.y)).withMessage(NAME);
+      return returnAction(Action.dig(new Coord(entity.pos.x + 1, entity.pos.y)));
     }
 
     // move
@@ -39,11 +39,11 @@ class BomberBehaviour extends EntityBehaviour {
               board.getWidth() - 3,
               4,
               board.getHeight() - 3);
-      return Action.move(randomFreeCoord).withMessage(NAME);
+      return returnAction(Action.move(randomFreeCoord));
     }
 
     // Return to headquarters for the new RADAR
-    return Action.move(getCloserHeadQuarterCell().coord).withMessage(NAME);
+    return returnAction(Action.move(getCloserHeadQuarterCell().coord));
   }
 
   private Coord getNextTrapTarget(int startX, int endX, int startY, int endY) {

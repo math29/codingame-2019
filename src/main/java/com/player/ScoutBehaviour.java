@@ -11,7 +11,7 @@ package com.player;
 
 class ScoutBehaviour extends EntityBehaviour {
 
-    private static final String NAME = "Scout";
+    protected static final String NAME = "Scout";
 
     ScoutBehaviour(final Entity entity, final Board board) {
         super(entity, board);

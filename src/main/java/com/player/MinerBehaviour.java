@@ -11,7 +11,7 @@ package com.player;
 
 class MinerBehaviour extends EntityBehaviour {
 
-  private static final String NAME = "Miner";
+  protected static final String NAME = "Miner";
 
   MinerBehaviour(final Entity entity, final Board board) {
     super(entity, board);

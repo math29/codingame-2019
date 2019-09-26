@@ -33,7 +33,7 @@ abstract class EntityBehaviour {
     int minDistance = 50;
     for (final Cell cell : board.getCells()) {
       int distance = cell.coord.distance(this.entity.pos);
-      if (cell.hasOre() && distance < minDistance) {
+      if (cell.hasOre() && distance < minDistance && !isCellBad(cell)) {
         closerCell = cell;
         minDistance = distance;
       }

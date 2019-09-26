@@ -101,6 +101,12 @@ abstract class EntityBehaviour {
   }
 
   private boolean isCellRadarFree(final Cell cell) {
-    return board.myRadarPos.contains(cell);
+    final AtomicReference<Boolean> isCellWithRadar = new AtomicReference<>(false);
+    board.myRadarPos.forEach(radarCoord -> {
+      if(!cell.known && radarCoord.x == cell.coord.x && radarCoord.y == cell.coord.y){
+        isCellWithRadar.set(true);
+      }
+    });
+    return isCellWithRadar.get();
   }
 }

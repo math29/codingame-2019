@@ -62,6 +62,6 @@ class BomberBehaviour extends EntityBehaviour {
   private boolean isCoordOutsideTrapCoverrage(final Coord coord) {
     return this.board.myTrapPos.stream()
             .noneMatch(rCoord ->
-                    isInside(rCoord.x, rCoord.y, 4, coord.x, coord.y));
+                    isInside(rCoord.x, rCoord.y, 2, coord.x, coord.y));
   }
 }

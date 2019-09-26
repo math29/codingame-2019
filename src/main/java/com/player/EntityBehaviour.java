@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ThreadLocalRandom;
 
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -38,30 +39,11 @@ abstract class EntityBehaviour {
   }
 
   Cell getCloserHeadQuarterCell() {
-    try {
-      return this.getCloserWithPredicate(board.getCell(new Coord(0, 0)), () -> true);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }
-//    Cell closerCell = ;
-//    int minDistance = 50;
-//    for (final Cell cell : board.getHeadQuarterCells()) {
-//      int distance = cell.coord.distance(this.entity.pos);
-//      if (distance < minDistance) {
-//        closerCell = cell;
-//        minDistance = distance;
-//      }
-//    }
-//    return closerCell;
-  }
-
-  Cell getCloserWithPredicate(final Cell defaultCell, Callable<Boolean> predicate) throws Exception {
-    Cell closerCell = defaultCell;
+    Cell closerCell = board.getCell(new Coord(0, 0));
     int minDistance = 50;
-    for (final Cell cell : board.getCells()) {
+    for (final Cell cell : board.getHeadQuarterCells()) {
       int distance = cell.coord.distance(this.entity.pos);
-      if (predicate.call() && distance < minDistance) {
+      if (distance < minDistance) {
         closerCell = cell;
         minDistance = distance;
       }
@@ -70,7 +52,11 @@ abstract class EntityBehaviour {
   }
 
   Coord getRandomSafeCoord() {
-    Coord coord = getRandomCoord();
+    return getRandomSafeCoord(0, board.getWidth(), 0, board.getHeight());
+  }
+
+  Coord getRandomSafeCoord(int startX, int endX, int startY, int endY) {
+    Coord coord = getRandomCoord(startX, endX, startY, endY);
     if(!isCellBad(board.getCell(coord))){
       return coord;
     } else {
@@ -78,10 +64,9 @@ abstract class EntityBehaviour {
     }
   }
 
-  private Coord getRandomCoord() {
-    Random randomGenerator = new Random();
-    int x = randomGenerator.nextInt(board.getWidth());
-    int y = randomGenerator.nextInt(board.getHeight());
+  private Coord getRandomCoord(int startX, int endX, int startY, int endY) {
+    int x = ThreadLocalRandom.current().nextInt(startX, endX);
+    int y = ThreadLocalRandom.current().nextInt(startY, endY);
     return new Coord(x, y);
   }
 

@@ -20,13 +20,13 @@ abstract class BehaviourOrchestrator {
 
   BehaviourOrchestrator(final Board board) {
     this.board = board;
-    behaviourMap = new HashMap<>();
     this.initializeBehaviours();
   }
 
   abstract void setRobotBehaviours();
 
   private void initializeBehaviours() {
+    behaviourMap = new HashMap<>();
     for (final Entity robot : board.myTeam.robots) {
       if (robot.hasItem() && robot.item == EntityType.RADAR) {
         this.behaviourMap.put(robot.id, new ScoutBehaviour(robot, board));

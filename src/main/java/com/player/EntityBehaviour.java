@@ -2,9 +2,7 @@ package com.player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicReference;
 
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -103,5 +101,16 @@ abstract class EntityBehaviour {
             .filter(coord -> coord.x == cell.coord.x && coord.y == cell.coord.y).findFirst()
             .orElse(null);
     return cellOptional == null;
+  }
+
+  static boolean isInside(int circle_x, int circle_y,
+                          int rad, int x, int y)
+  {
+    if ((x - circle_x) * (x - circle_x) +
+        (y - circle_y) * (y - circle_y) <= rad * rad) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

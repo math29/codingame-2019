@@ -16,10 +16,17 @@ class MinerBehaviour extends EntityBehaviour {
   }
 
   @Override Action getNextAction() {
-    Coord targetCell = this.getCloserOreCell().coord;
-    if (targetCell.distance(entity.pos) == 1) {
-      return Action.dig(targetCell);
+    Coord targetCoord;
+    // Miner has cristal on him else go to mine
+    if (entity.hasItem()) {
+      targetCoord = this.getCloserHeadQuarterCell().coord;
+    } else {
+      targetCoord = this.getCloserOreCell().coord;
+      if (targetCoord.distance(entity.pos) <= 1) {
+        return Action.dig(targetCoord);
+      }
     }
-    return Action.move(targetCell);
+    return Action.move(targetCoord);
+    // @TODO: Set If no ore anymore, set Entity taken as empty
   }
 }

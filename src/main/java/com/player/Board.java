@@ -1,6 +1,7 @@
 package com.player;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 // ------------------------------------------------------------------------
@@ -76,7 +77,7 @@ class Board {
     }
 
     List<Cell> getHeadQuarterCells() {
-        return Arrays.asList(this.cells[0]);
+        return Arrays.stream(this.cells).map(xCells -> xCells[0]).collect(Collectors.toList());
     }
 
     private static <T> Stream<T> flattenStream(T[][] arrays) {

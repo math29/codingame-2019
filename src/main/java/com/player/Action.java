@@ -37,6 +37,11 @@ class Action {
         return new Action("REQUEST", null, item);
     }
 
+    public Action withMessage(final String message) {
+        this.message = message;
+        return this;
+    }
+
     public String toString() {
         StringBuilder builder = new StringBuilder(command);
         if (pos != null) {

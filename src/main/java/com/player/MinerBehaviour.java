@@ -11,6 +11,8 @@ package com.player;
 
 class MinerBehaviour extends EntityBehaviour {
 
+  private static final String NAME = "Miner";
+
   MinerBehaviour(final Entity entity, final Board board) {
     super(entity, board);
   }
@@ -23,7 +25,7 @@ class MinerBehaviour extends EntityBehaviour {
     } else {
       targetCoord = this.getCloserOreCell().coord;
       if (targetCoord.distance(entity.pos) <= 1) {
-        return Action.dig(targetCoord);
+        return Action.dig(targetCoord).withMessage(NAME);
       }
     }
     return Action.move(targetCoord);

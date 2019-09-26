@@ -73,4 +73,12 @@ class Board {
     Cell getCell(Coord pos) {
         return cells[pos.y][pos.x];
     }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }

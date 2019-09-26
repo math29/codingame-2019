@@ -33,4 +33,8 @@ abstract class EntityBehaviour {
     }
     return closerCell;
   }
+
+//  protected Cell getCloserHeadQuarterCell() {
+//
+//  }
 }

@@ -50,16 +50,21 @@ abstract class EntityBehaviour {
   }
 
   Coord getRandomSafeCoord() {
-    Random randomGenerator = new Random();
-    int x = randomGenerator.nextInt(board.getWidth());
-    int y = randomGenerator.nextInt(board.getHeight());
-
-    Coord coord = new Coord(x, y);
-    while (!isCellBad(board.getCell(coord))){
+    Coord coord = getRandomCoord();
+    if(!isCellBad(board.getCell(coord))){
       return coord;
+    } else {
+      return getRandomSafeCoord();
     }
-    return null;
   }
+
+  private Coord getRandomCoord() {
+    Random randomGenerator = new Random();
+    int x = randomGenerator.nextInt(board.getHeight());
+    int y = randomGenerator.nextInt(board.getWidth());
+    return new Coord(x, y);
+  }
+
   protected List<Cell> getBadCells(Board board){
     List<Cell> badCells = new ArrayList<>();
     for (Cell cell: board.getCells()) {

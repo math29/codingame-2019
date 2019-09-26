@@ -22,12 +22,13 @@ class BomberBehaviour extends EntityBehaviour {
   }
 
   @Override Action getNextAction() {
+    Coord randomCoord = getRandomSafeCoord();
     if (robot.pos.y == 0 && robot.item == EntityType.NOTHING) {
       return Action.request(EntityType.TRAP);
     } else if (robot.pos.y == 0 && robot.item == EntityType.TRAP) {
-      return Action.move(getRandomSafeCoord());
+      return Action.move(randomCoord);
     } else if (robot.item == EntityType.TRAP) {
-      return Action.dig(getRandomSafeCoord());
+      return Action.dig(randomCoord);
     } else {
       return Action.move(new Coord(random.ints(0, (board.getHeight() -1)).findFirst().getAsInt(),0));
     }

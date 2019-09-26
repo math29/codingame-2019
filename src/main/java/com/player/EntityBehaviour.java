@@ -69,6 +69,13 @@ abstract class EntityBehaviour {
     return new Coord(x, y);
   }
 
+  boolean isInsideRadarOrTrapZone() {
+    return this.entity.pos.x >= 5
+            && this.entity.pos.x < board.getWidth() - 3
+            && this.entity.pos.y >= 4
+            && this.entity.pos.y < board.getHeight() - 3;
+  }
+
   protected List<Cell> getBadCells(Board board) {
     List<Cell> badCells = new ArrayList<>();
     for (Cell cell : board.getCells()) {

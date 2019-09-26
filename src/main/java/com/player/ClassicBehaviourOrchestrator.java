@@ -24,6 +24,8 @@ class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
       System.err.println("this.getNumberOfScouts(): " + this.getNumberOfScouts());
       System.err.println("this.getNumberOfBombers(): " + this.getNumberOfBombers());
       if (this.behaviourMap.get(robot.id) == null) {
+        System.err.println("board.myRadarPos.size(): " + board.myRadarPos.size());
+        System.err.println("getNumberOfScouts: " + getNumberOfScouts());
         if (this.getNumberOfScouts() < 1
             && board.myRadarPos.size() < NUMBER_OF_RADARS_MAX) {
           this.behaviourMap.put(robot.id, new ScoutBehaviour(robot, board));

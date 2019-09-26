@@ -27,7 +27,7 @@ class ScoutBehaviour extends EntityBehaviour {
             && isInsideRadarOrTrapZone()
             && isCoordOutsideRadarCoverrage(entity.pos)
             && !isCellBad(board.getCell(entity.pos))) {
-            return returnAction(Action.dig(new Coord(entity.pos.x + 1, entity.pos.y)));
+            return returnAction(Action.dig(new Coord(entity.pos.x, entity.pos.y)));
         }
 
         // move
@@ -51,6 +51,7 @@ class ScoutBehaviour extends EntityBehaviour {
             && !isCellBad(board.getCell(coord)) && board.getCell(coord).hasOre()){
             return coord;
         } else {
+            // Should not happen
             if (deep >= 30) {
                 return new Coord(0, 0);
             }

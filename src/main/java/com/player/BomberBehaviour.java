@@ -22,12 +22,12 @@ class BomberBehaviour extends EntityBehaviour {
       return returnAction(Action.request(EntityType.TRAP));
     }
 
-    // If Bomer is with TRAP in trap safe zone, dig it in the ground
+    // If Bomber is with TRAP in trap safe zone, dig it in the ground
     if (entity.item == EntityType.TRAP
             && isInsideRadarOrTrapZone()
             && isCoordOutsideTrapCoverrage(entity.pos)
             && !isCellBad(board.getCell(entity.pos))) {
-      return returnAction(Action.dig(new Coord(entity.pos.x + 1, entity.pos.y)));
+      return returnAction(Action.dig(new Coord(entity.pos.x, entity.pos.y)));
     }
 
     // move
@@ -51,6 +51,7 @@ class BomberBehaviour extends EntityBehaviour {
             && !isCellBad(board.getCell(coord)) && board.getCell(coord).hasOre()){
       return coord;
     } else {
+      // Should not happen
       if (deep >= 30) {
         return new Coord(0, 0);
       }
@@ -61,6 +62,6 @@ class BomberBehaviour extends EntityBehaviour {
   private boolean isCoordOutsideTrapCoverrage(final Coord coord) {
     return this.board.myTrapPos.stream()
             .noneMatch(rCoord ->
-                    isInside(rCoord.x, rCoord.y, 4, coord.x, coord.y));
+                    isInside(rCoord.x, rCoord.y, 2, coord.x, coord.y));
   }
 }

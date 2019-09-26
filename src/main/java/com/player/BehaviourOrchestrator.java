@@ -28,11 +28,11 @@ abstract class BehaviourOrchestrator {
   private void initializeBehaviours() {
     behaviourMap = new HashMap<>();
     for (final Entity robot : board.myTeam.robots) {
-      if (robot.hasItem() && robot.item == EntityType.RADAR) {
+      if (robot.hasItem() && robot.item == EntityType.RADAR && robot.isAlive()) {
         this.behaviourMap.put(robot.id, new ScoutBehaviour(robot, board));
-      } else if (robot.hasItem() && robot.item == EntityType.TRAP) {
+      } else if (robot.hasItem() && robot.item == EntityType.TRAP && robot.isAlive()) {
         this.behaviourMap.put(robot.id, new BomberBehaviour(robot, board));
-      } else if (robot.hasItem() && robot.item == EntityType.AMADEUSIUM) {
+      } else if (robot.hasItem() && robot.item == EntityType.AMADEUSIUM && robot.isAlive()) {
         this.behaviourMap.put(robot.id, new MinerBehaviour(robot, board));
       } else {
         this.behaviourMap.put(robot.id, null);

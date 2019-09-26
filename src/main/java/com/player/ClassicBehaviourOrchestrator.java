@@ -21,8 +21,6 @@ class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
 
   @Override void setRobotBehaviours() {
     for (final Entity robot : board.myTeam.robots) {
-      System.err.println("this.getNumberOfScouts(): " + this.getNumberOfScouts());
-      System.err.println("this.getNumberOfBombers(): " + this.getNumberOfBombers());
       if (this.behaviourMap.get(robot.id) == null) {
         if (this.getNumberOfScouts() < 1
             && board.myRadarPos.size() < NUMBER_OF_RADARS_MAX) {

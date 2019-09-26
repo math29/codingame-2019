@@ -12,6 +12,7 @@ package com.player;
 import java.util.*;
 import java.io.*;
 import java.math.*;
+import java.util.stream.Stream;
 
 /**
  * Deliver more ore to hq (left side of the map) than your opponent. Use radars to find ore but beware of traps!
@@ -40,8 +41,9 @@ class Player {
           robot.action = Action.none();
           robot.action.message = "Java Starter";
         } else if (index == 1) {
-          robot.action = Action.none();
-          robot.action.message = "Java Starter";
+          EntityBehaviour behaviour = new MinerBehaviour(robot, board);
+          robot.action = behaviour.getNextAction();
+          robot.action.message = "Miner Robot";
         } else {
           robot.action = Action.none();
           robot.action.message = "Java Starter";

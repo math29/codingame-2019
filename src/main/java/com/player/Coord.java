@@ -33,7 +33,7 @@ class Coord {
     // Manhattan distance (for 4 directions maps)
     // see: https://en.wikipedia.org/wiki/Taxicab_geometry
     int distance(Coord other) {
-        return abs(x - other.x) + abs(y - other.y);
+        return Math.abs(x - other.x) + Math.abs(y - other.y);
     }
 
     public int hashCode() {

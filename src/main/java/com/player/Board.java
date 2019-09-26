@@ -1,10 +1,7 @@
 package com.player;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Stream;
 
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -42,7 +39,7 @@ class Board {
         cells = new Cell[height][width];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                cells[y][x] = new Cell(in);
+                cells[y][x] = new Cell(in, new Coord(x, y));
             }
         }
         int entityCount = in.nextInt();
@@ -72,5 +69,17 @@ class Board {
 
     Cell getCell(Coord pos) {
         return cells[pos.y][pos.x];
+    }
+
+    List<Cell> getCells() {
+        return Arrays.asList(flattenStream(this.cells).toArray(Cell[]::new));
+    }
+
+    private static <T> Stream<T> flattenStream(T[][] arrays) {
+        List<T> list = new ArrayList<>();
+        for (T[] array : arrays) {
+            Arrays.stream(array).forEach(list::add);
+        }
+        return list.stream();
     }
 }

@@ -15,6 +15,7 @@ class Cell {
     boolean known;
     int ore;
     boolean hole;
+    Coord coord;
 
     Cell(boolean known, int ore, boolean hole) {
         this.known = known;
@@ -22,7 +23,8 @@ class Cell {
         this.hole = hole;
     }
 
-    Cell(Scanner in) {
+    Cell(Scanner in, final Coord coord) {
+        this.coord = coord;
         String oreStr = in.next();
         if (oreStr.charAt(0) == '?') {
             known = false;
@@ -33,5 +35,13 @@ class Cell {
         }
         String holeStr = in.next();
         hole = (holeStr.charAt(0) != '0');
+    }
+
+    Boolean hasOre() {
+        return this.ore > 0;
+    }
+
+    Boolean hasHole() {
+        return this.hole;
     }
 }

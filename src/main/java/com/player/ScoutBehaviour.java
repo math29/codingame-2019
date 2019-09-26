@@ -9,6 +9,9 @@ package com.player;
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 
+import java.util.ArrayList;
+import java.util.List;
+
 class ScoutBehaviour extends EntityBehaviour {
 
     ScoutBehaviour(final Entity entity, final Board board) {
@@ -25,20 +28,33 @@ class ScoutBehaviour extends EntityBehaviour {
         // If Scout is with RADAR in radar safe zone, dig it in the ground
         if (entity.item == EntityType.RADAR
             && isInsideRadarOrTrapZone()
-            && isCoordOutsideRadarCoverrage(entity.pos)
+           // && isCoordOutsideRadarCoverrage(entity.pos)
             && !isCellBad(board.getCell(entity.pos))) {
             return returnAction(Action.dig(new Coord(entity.pos.x, entity.pos.y)));
         }
 
         // move
         if (entity.item == EntityType.RADAR) {
-            Coord randomFreeCoord = getNextRadarTarget(
+            List<Coord> fixedCoord = new ArrayList<>();
+            fixedCoord.add(new Coord(8, 4));
+            fixedCoord.add(new Coord(16, 4));
+            fixedCoord.add(new Coord(24, 4));
+            fixedCoord.add(new Coord(8, 9));
+            fixedCoord.add(new Coord(16, 9));
+            fixedCoord.add(new Coord(24, 9));
+
+            Coord coordToUse = fixedCoord.stream()
+                    .filter(c -> !board.getCell(c).known)
+                    .findFirst()
+                    .orElse(new Coord(0,0));
+
+            /*Coord randomFreeCoord = getNextRadarTarget(
                 5,
                 board.getWidth() - 3,
                 4,
                 board.getHeight() - 3,
-                0);
-            return returnAction(Action.move(randomFreeCoord));
+                0);*/
+            return returnAction(Action.move(coordToUse));
         }
 
         // Return to headquarters for the new RADAR

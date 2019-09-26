@@ -13,9 +13,6 @@ import java.util.Scanner;
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 class Team {
     int score;
     Collection<Entity> robots;

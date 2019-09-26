@@ -16,6 +16,10 @@ class MinerBehaviour extends EntityBehaviour {
   }
 
   @Override Action getNextAction() {
-    return Action.move(this.getCloserOreCell().coord);
+    Coord targetCell = this.getCloserOreCell().coord;
+    if (targetCell.distance(entity.pos) == 1) {
+      return Action.dig(targetCell);
+    }
+    return Action.move(targetCell);
   }
 }

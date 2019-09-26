@@ -40,6 +40,7 @@ class Player {
         if (index == 0) {
           ScoutBehaviour scout = new ScoutBehaviour(robot, board);
           robot.action = scout.getNextAction();
+          robot.action.message = "Scout Robot";
         } else if (index == 1) {
           EntityBehaviour behaviour = new MinerBehaviour(robot, board);
           robot.action = behaviour.getNextAction();

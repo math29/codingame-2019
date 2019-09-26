@@ -48,15 +48,15 @@ class BomberBehaviour extends EntityBehaviour {
   private Coord getNextTrapTarget(int startX, int endX, int startY, int endY, int deep) {
     Coord coord = getRandomCoord(startX, endX, startY, endY);
     if (isCoordOutsideTrapCoverrage(coord)
-            && !isCellBad(board.getCell(coord)) && board.getCell(coord).hasOre()){
-        return coord;
+            && !isCellBad(board.getCell(coord))){
+      return coord;
     } else {
       // Should not happen
       if (deep >= 30) {
         return new Coord(0, 0);
       }
+      return getNextTrapTarget(startX, endX, startY, endY, deep + 1);
     }
-    return getNextTrapTarget(startX, endX, startY, endY, deep + 1);
   }
 
   private boolean isCoordOutsideTrapCoverrage(final Coord coord) {

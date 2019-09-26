@@ -15,12 +15,14 @@ class Cell {
     boolean known;
     int ore;
     boolean hole;
+    boolean safe;
     Coord coord;
 
-    Cell(boolean known, int ore, boolean hole) {
+    Cell(boolean known, int ore, boolean hole, boolean safe) {
         this.known = known;
         this.ore = ore;
         this.hole = hole;
+        this.safe = safe;
     }
 
     Cell(Scanner in, final Coord coord) {

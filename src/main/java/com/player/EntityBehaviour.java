@@ -1,10 +1,9 @@
 package com.player;
 
-import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicReference;
 
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -91,11 +90,23 @@ abstract class EntityBehaviour {
 
   }
 
-  protected boolean isCellBad(final Cell cell) {
-    return !cell.known && board.myTrapPos.contains(cell);
+  private boolean isCellBad(final Cell cell) {
+    final AtomicReference<Boolean> isCellBad = new AtomicReference<>(false);
+    board.myTrapPos.forEach(trapCoord -> {
+      if(!cell.known && trapCoord.x == cell.coord.x && trapCoord.y == cell.coord.y){
+        isCellBad.set(true);
+      }
+    });
+    return isCellBad.get();
   }
 
   private boolean isCellRadarFree(final Cell cell) {
-    return board.myRadarPos.contains(cell);
+    final AtomicReference<Boolean> isCellWithRadar = new AtomicReference<>(false);
+    board.myRadarPos.forEach(radarCoord -> {
+      if(!cell.known && radarCoord.x == cell.coord.x && radarCoord.y == cell.coord.y){
+        isCellWithRadar.set(true);
+      }
+    });
+    return isCellWithRadar.get();
   }
 }

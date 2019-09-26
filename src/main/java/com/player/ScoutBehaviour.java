@@ -31,6 +31,7 @@ class ScoutBehaviour extends EntityBehaviour {
                     board.getWidth() - 3,
                     4,
                     board.getHeight() - 3);
+            System.err.println("Scout coord: [" + randomFreeCoord.x + ", " + randomFreeCoord.y + "]");
             return Action.move(randomFreeCoord);
         }
 

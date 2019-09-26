@@ -1,5 +1,14 @@
 package com.player;
 
+import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -9,7 +18,6 @@ package com.player;
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 
-import java.util.Random;
 
 abstract class EntityBehaviour {
 
@@ -49,11 +57,30 @@ abstract class EntityBehaviour {
     return closerCell;
   }
 
-  Coord getRandomSafeCoord() {
+  Coord getRandomSafeCoord(Board board) {
     Random randomGenerator = new Random();
-    int x = randomGenerator.nextInt(board.getHeight()) + 1;
-    int y = randomGenerator.nextInt(board.getWidth()) + 1;
+    int x = randomGenerator.nextInt(board.getHeight());
+    int y = randomGenerator.nextInt(board.getWidth());
 
-    return new Coord(x, y);
+    Coord coord = new Coord(x, y);
+    while (!isCellBad(board.getCell(coord))){
+      return coord;
+    }
+    return null;
   }
+  protected List<Cell> getBadCells(Board board){
+    List<Cell> badCells = new ArrayList<>();
+    for (Cell cell: board.getCells()) {
+      if(isCellBad(cell)){
+        badCells.add(cell);
+      }
+    }
+    return badCells;
+
+  }
+
+  private boolean isCellBad(final Cell cell) {
+    return !cell.known && board.myTrapPos.contains(cell);
+  }
+
 }

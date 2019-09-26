@@ -34,9 +34,19 @@ class Player {
       board.update(in);
 
       // Insert your strategy here
+      Integer index = 0;
       for (Entity robot : board.myTeam.robots) {
-        robot.action = Action.none();
-        robot.action.message = "Java Starter";
+        if (index == 0) {
+          robot.action = Action.none();
+          robot.action.message = "Java Starter";
+        } else if (index == 1) {
+          robot.action = Action.none();
+          robot.action.message = "Java Starter";
+        } else {
+          robot.action = Action.none();
+          robot.action.message = "Java Starter";
+        }
+        index++;
       }
 
       // Send your actions for this turn

@@ -19,17 +19,20 @@ class ScoutBehaviour extends EntityBehaviour {
 
     @Override Action getNextAction() {
 
-        if (entity.pos.y == 0 && entity.item == EntityType.NOTHING) {
+        // If Scout is at the headquarters and carries nothing, take RADAR
+        if (entity.isAtHeadquarters() && entity.item == EntityType.NOTHING) {
             return Action.request(EntityType.RADAR);
         }
 
-        if (entity.pos.y == 0 && entity.item == EntityType.RADAR) {
+        // If Scout is at the headquarters and carries RADAR, move
+        if (entity.isAtHeadquarters() && entity.item == EntityType.RADAR) {
             Random r = new Random();
             int x = r.ints(0, (board.getHeight() + 1)).findFirst().getAsInt();
             int y = r.ints(0, (board.getWidth() + 1)).findFirst().getAsInt();
             return Action.move(new Coord(x, y));
         }
 
+        // If Scout is with RADAR on the map, git it in the ground
         if (entity.item == EntityType.RADAR
                 && (entity.pos.x >= 0 && entity.pos.x < board.width)
                 && (entity.pos.y >= 0 && entity.pos.y < board.height)) {
@@ -38,6 +41,7 @@ class ScoutBehaviour extends EntityBehaviour {
             return Action.dig(new Coord(xToDig, yToDig));
         }
 
+        // Return to headquarters for the new RADAR
         return Action.move(new Coord(0,0));
     }
 }

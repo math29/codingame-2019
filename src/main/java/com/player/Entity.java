@@ -37,4 +37,8 @@ class Entity {
     boolean hasItem() {
         return this.item != EntityType.NOTHING;
     }
+
+    boolean isAtHeadquarters() {
+        return pos.y == 0;
+    }
 }

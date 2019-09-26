@@ -29,6 +29,7 @@ class BomberBehaviour extends EntityBehaviour {
       return Action.move(randomCoord);
     } else if (robot.item == EntityType.TRAP) {
       return Action.dig(robot.pos);
+
     } else {
       return Action.move(new Coord(random.ints(0, (board.getHeight() -1)).findFirst().getAsInt(),0));
     }

@@ -9,6 +9,8 @@ package com.player;
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 
+import java.util.Random;
+
 abstract class EntityBehaviour {
 
   protected Entity entity;
@@ -45,5 +47,13 @@ abstract class EntityBehaviour {
       }
     }
     return closerCell;
+  }
+
+  Coord getRandomSafeCoord() {
+    Random randomGenerator = new Random();
+    int x = randomGenerator.nextInt(board.getHeight()) + 1;
+    int y = randomGenerator.nextInt(board.getWidth()) + 1;
+
+    return new Coord(x, y);
   }
 }

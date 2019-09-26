@@ -53,7 +53,7 @@ class ScoutBehaviour extends EntityBehaviour {
         } else {
             // Should not happen
             if (deep >= 30) {
-                return new Coord(0, 0);
+                return coord;
             }
         }
         return getNextRadarTarget(startX, endX, startY, endY, deep+1);

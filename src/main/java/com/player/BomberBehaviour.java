@@ -53,7 +53,7 @@ class BomberBehaviour extends EntityBehaviour {
     } else {
       // Should not happen
       if (deep >= 30) {
-        return new Coord(0, 0);
+        return coord;
       }
     }
     return getNextTrapTarget(startX, endX, startY, endY, deep + 1);

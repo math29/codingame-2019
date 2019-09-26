@@ -2,6 +2,7 @@ package com.player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -56,7 +57,7 @@ abstract class EntityBehaviour {
 
   Coord getRandomSafeCoord(int startX, int endX, int startY, int endY) {
     Coord coord = getRandomCoord(startX, endX, startY, endY);
-    if(!isCellBad(board.getCell(coord))){
+    if (!isCellBad(board.getCell(coord))) {
       return coord;
     } else {
       return getRandomSafeCoord();
@@ -65,8 +66,8 @@ abstract class EntityBehaviour {
 
   Coord getRandomSafeAndRadarFreeCoord(int startX, int endX, int startY, int endY) {
     Coord coord = getRandomCoord(startX, endX, startY, endY);
-    if(!isCellRadarFree(board.getCell(coord))
-            && !isCellBad(board.getCell(coord))){
+    if (!isCellRadarFree(board.getCell(coord))
+        && !isCellBad(board.getCell(coord))) {
       return coord;
     } else {
       return getRandomSafeCoord();
@@ -79,10 +80,10 @@ abstract class EntityBehaviour {
     return new Coord(x, y);
   }
 
-  protected List<Cell> getBadCells(Board board){
+  protected List<Cell> getBadCells(Board board) {
     List<Cell> badCells = new ArrayList<>();
-    for (Cell cell: board.getCells()) {
-      if(isCellBad(cell)){
+    for (Cell cell : board.getCells()) {
+      if (isCellBad(cell)) {
         badCells.add(cell);
       }
     }
@@ -91,19 +92,16 @@ abstract class EntityBehaviour {
   }
 
   private boolean isCellBad(final Cell cell) {
-    final AtomicReference<Boolean> isCellBad = new AtomicReference<>(false);
-    board.myTrapPos.forEach(trapCoord -> {
-      if(!cell.known && trapCoord.x == cell.coord.x && trapCoord.y == cell.coord.y){
-        isCellBad.set(true);
-      }
-    });
-    return isCellBad.get();
+    Coord cellOptional = board.myTrapPos.parallelStream()
+        .filter(trapCoord -> trapCoord.x == cell.coord.x && trapCoord.y == cell.coord.y).findFirst()
+        .orElse(null);
+    return cellOptional != null;
   }
 
   private boolean isCellRadarFree(final Cell cell) {
     final AtomicReference<Boolean> isCellWithRadar = new AtomicReference<>(false);
     board.myRadarPos.forEach(radarCoord -> {
-      if(!cell.known && radarCoord.x == cell.coord.x && radarCoord.y == cell.coord.y){
+      if (!cell.known && radarCoord.x == cell.coord.x && radarCoord.y == cell.coord.y) {
         isCellWithRadar.set(true);
       }
     });

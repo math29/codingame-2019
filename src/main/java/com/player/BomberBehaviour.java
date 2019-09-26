@@ -21,12 +21,15 @@ class BomberBehaviour extends EntityBehaviour {
     Coord randomCoord = getRandomSafeCoord();
     if (robot.isAtHeadquarters() && !robot.hasItem()) {
       return Action.request(EntityType.TRAP);
-    } else if (robot.isAtHeadquarters() && robot.item.equals(EntityType.TRAP)) {
+    } else if (robot.isAtHeadquarters() && robot.item.equals(EntityType.TRAP) && board.getCell(randomCoord).hasOre()) {
       return Action.move(randomCoord);
+    } else if (robot.isAtHeadquarters() && robot.item.equals(EntityType.TRAP) && !board.getCell(randomCoord).hasOre()) {
+      getNextAction();
     } else if (robot.item == EntityType.TRAP) {
       return Action.dig(robot.pos);
     } else {
       return Action.move(getCloserHeadQuarterCell().coord);
     }
+    return null;
   }
 }

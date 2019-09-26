@@ -10,11 +10,11 @@ import java.util.Random;
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 
-public class BomberBehaviour extends EntityBehaviour {
+class BomberBehaviour extends EntityBehaviour {
   private final Random random;
   private final Entity robot;
   private final Board board;
-  public BomberBehaviour(final Entity robot, final Board board) {
+  BomberBehaviour(final Entity robot, final Board board) {
     super(robot, board);
     this.robot = robot;
     this.board = board;

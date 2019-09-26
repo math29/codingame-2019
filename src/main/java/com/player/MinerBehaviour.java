@@ -23,7 +23,7 @@ class MinerBehaviour extends EntityBehaviour {
       targetCoord = this.getCloserHeadQuarterCell().coord;
     } else {
       targetCoord = this.getCloserOreCell().coord;
-      if (targetCoord.distance(entity.pos) <= 1) {
+      if (targetCoord.distance(entity.pos) <= 2) {
         return returnAction(Action.dig(targetCoord));
       }
     }

@@ -51,8 +51,8 @@ abstract class EntityBehaviour {
 
   Coord getRandomSafeCoord() {
     Random randomGenerator = new Random();
-    int x = randomGenerator.nextInt(board.getHeight());
-    int y = randomGenerator.nextInt(board.getWidth());
+    int x = randomGenerator.nextInt(board.getWidth());
+    int y = randomGenerator.nextInt(board.getHeight());
 
     Coord coord = new Coord(x, y);
     while (!isCellBad(board.getCell(coord))){

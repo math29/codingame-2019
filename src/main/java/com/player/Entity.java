@@ -39,6 +39,6 @@ class Entity {
     }
 
     boolean isAtHeadquarters() {
-        return pos.y == 0;
+        return pos.x == 0;
     }
 }

@@ -38,21 +38,21 @@ class Player {
       // Insert your strategy here
       Integer index = 0;
       for (Entity robot : board.myTeam.robots) {
-        if (index == 0) {
-          ScoutBehaviour scout = new ScoutBehaviour(robot, board);
-          robot.action = scout.getNextAction();
+        switch (index) {
+        case 0:
+          robot.action = new ScoutBehaviour(robot, board).getNextAction();
           robot.action.message = "Scout Robot";
-        } else if (index == 1) {
-          EntityBehaviour behaviour = new MinerBehaviour(robot, board);
-          robot.action = behaviour.getNextAction();
-          robot.action.message = "Miner Robot";
-        } else if (index == 2) {
-          EntityBehaviour behaviour = new BomberBehaviour(robot, board);
-          robot.action = behaviour.getNextAction();
+          break;
+        case 1:
+          robot.action = new BomberBehaviour(robot, board).getNextAction();
           robot.action.message = "Bomber Robot";
-        } else {
-          robot.action = Action.none();
-          robot.action.message = "Java Starter";
+          break;
+        case 2:
+        case 3:
+        case 4:
+          robot.action = new MinerBehaviour(robot, board).getNextAction();
+          robot.action.message = "Miner Robot";
+          break;
         }
         index++;
       }

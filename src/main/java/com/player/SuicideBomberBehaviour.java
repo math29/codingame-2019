@@ -78,7 +78,6 @@ class SuicideBomberBehaviour extends EntityBehaviour {
     ));
   }
 
-
   private Cell getClosestExplodingCell() {
     Cell closerCell = null;
     int minDistance = 10;

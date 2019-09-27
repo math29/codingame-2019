@@ -21,4 +21,8 @@ class Team {
         score = in.nextInt();
         robots = new ArrayList<>();
     }
+
+    int getNumberOfRobotAlive() {
+        return (int)this.robots.stream().filter(Entity::isAlive).count();
+    }
 }

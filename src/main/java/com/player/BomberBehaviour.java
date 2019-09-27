@@ -44,7 +44,7 @@ class BomberBehaviour extends EntityBehaviour {
     int minDistance = 50;
     for (final Cell cell : board.getCells()) {
       int distance = cell.coord.distance(this.entity.pos);
-      if (cell.ore > 1 && distance < minDistance && !isCellBad(cell)) {
+      if (cell.ore > 1 && distance < minDistance && !isCellBad(cell) && !cell.hole) {
         closerCell = cell;
         minDistance = distance;
       }

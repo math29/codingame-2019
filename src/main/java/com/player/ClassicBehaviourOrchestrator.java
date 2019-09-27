@@ -1,7 +1,5 @@
 package com.player;
 
-import java.util.stream.Collectors;
-
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -13,8 +11,6 @@ import java.util.stream.Collectors;
 
 class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
 
-  private static final int NUMBER_OF_RADARS_MAX = 6;
-
   private static final int NUMBER_OF_TRAPS_MAX = 10;
 
   ClassicBehaviourOrchestrator(final Board board) {
@@ -25,8 +21,8 @@ class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
     for (final Entity robot : board.myTeam.robots) {
       if (this.behaviourMap.get(robot.id) == null) {
         if (this.getNumberOfScouts() < 1
-            && board.myRadarPos.size() < NUMBER_OF_RADARS_MAX
-            && board.getCells().stream().noneMatch(cell -> cell.hasOre() && !isCellBad(cell))) {
+            && board.getCells().stream().filter(cell -> cell.hasOre() && !isCellBad(cell)).count() < board.myTeam
+            .getNumberOfRobotAlive()) {
           this.behaviourMap.put(robot.id, new ScoutBehaviour(robot, board));
         } else if (this.getNumberOfBombers() < 1
             && board.myTrapPos.size() < NUMBER_OF_TRAPS_MAX) {

@@ -26,7 +26,7 @@ class SuicideBomberBehaviour extends EntityBehaviour {
     }
 
     if (enemiesInRange().size() >= 3) {
-      Coord coordToBomb = new Coord(1, enemiesInRange().get(0).pos.y);
+      Coord coordToBomb = getClosestExplodingCell().coord;
       return returnAction(Action.dig(coordToBomb));
     }
 
@@ -37,14 +37,6 @@ class SuicideBomberBehaviour extends EntityBehaviour {
         }
       }
     }
-/*
-
-    Cell closestSuicideCell = this.getClosestSuicideCell();
-
-    if (entity.item == EntityType.TRAP && !isCellBad(board.getCell(closestSuicideCell.coord))) {
-      return returnAction(Action.dig(closestSuicideCell.coord));
-    }
-*/
 
     // Return to headquarters for the new TRAP
     return returnAction(Action.move(getCloserHeadQuarterCell().coord));
@@ -67,5 +59,24 @@ class SuicideBomberBehaviour extends EntityBehaviour {
     return  board.myTrapPos.stream().anyMatch(trapPosition -> (trapPosition.x == robot.pos.x + 1 || trapPosition.x == robot.pos.x - 1 || trapPosition.x == robot.pos.x) && (
         trapPosition.y == robot.pos.y + 1 || trapPosition.y == robot.pos.y - 1 || trapPosition.y == robot.pos.y));
 
+  }
+
+
+  private Cell getClosestExplodingCell() {
+    Cell closerCell = null;
+    int minDistance = 3;
+    for (int i = 1; i < this.entity.pos.x+2; i++) {
+      for (final Cell cell : board.getCellsOnColumn(this.entity.pos.x)) {
+        int distance = cell.coord.distance(this.entity.pos);
+        if (isCellBad(cell) && distance < minDistance && cell.hole) {
+          closerCell = cell;
+          minDistance = distance;
+        }
+      }
+    }
+    if (closerCell == null) {
+      return board.getCell(new Coord(1, 1));
+    }
+    return closerCell;
   }
 }

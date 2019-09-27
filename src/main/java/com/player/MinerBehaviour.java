@@ -29,8 +29,10 @@ class MinerBehaviour extends EntityBehaviour {
     Optional<Cell> closestSafe = getClosestSafeInterestingOre();
     if (!closestSafe.isPresent()) {
       closestOre = this.getClosestInterestingOre();
-      System.err.println(String.format("Closest cell: (%s,%s).",
-              closestOre.get().coord.x, closestOre.get().coord.y));
+      if (closestOre.isPresent()) {
+        System.err.println(String.format("Closest cell: (%s,%s).",
+                closestOre.get().coord.x, closestOre.get().coord.y));
+      }
     } else {
       closestOre = closestSafe;
       System.err.println(String.format("Closest safe cell: (%s,%s).",

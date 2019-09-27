@@ -1,5 +1,9 @@
 package com.player;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -16,7 +20,8 @@ class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
       if (this.behaviourMap.get(robot.id) == null) {
         if (this.getNumberOfScouts() < 1
             && board.getCells().stream().filter(cell -> cell.hasOre() && !isCellBad(cell)).count() < board.myTeam
-            .getNumberOfRobotAlive()) {
+            .getNumberOfRobotAlive()
+            && robot.id == getBestMatchNextScoutRobotId().orElse(robot.id)) {
           this.behaviourMap.put(robot.id, new ScoutBehaviour(robot, board));
         } else if (this.getNumberOfSuicideBombers() < 1) {
           this.behaviourMap.put(robot.id, new SuicideBomberBehaviour(robot, board));
@@ -25,6 +30,27 @@ class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
         }
       }
     }
+  }
+
+  private Optional<Integer> getBestMatchNextScoutRobotId() {
+    List<Integer> availableRobots = this.behaviourMap.keySet().stream().filter(key -> behaviourMap.get(key) == null)
+        .collect(Collectors.toList());
+    int minDistance = 50;
+    Optional<Integer> closestRobotIndex = Optional.empty();
+    for (final Integer availableRobotIndex : availableRobots) {
+      Optional<Entity> robot = this.board.myTeam.robots.stream().filter(entity -> entity.id == availableRobotIndex)
+          .findFirst();
+      if (robot.isPresent()) {
+        for (final Cell cell : board.getHeadQuarterCells()) {
+          int distance = cell.coord.distance(robot.get().pos);
+          if (distance < minDistance) {
+            closestRobotIndex = Optional.of(robot.get().id);
+            minDistance = distance;
+          }
+        }
+      }
+    }
+    return closestRobotIndex;
   }
 
   private boolean isCellBad(final Cell cell) {

@@ -14,6 +14,7 @@ class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
   @Override void setRobotBehaviours() {
     for (final Entity robot : board.myTeam.robots) {
       if (this.behaviourMap.get(robot.id) == null) {
+        // @TODO: Take in account the closest rover from the base
         if (this.getNumberOfScouts() < 1
             && board.getCells().stream().filter(cell -> cell.hasOre() && !isCellBad(cell)).count() < board.myTeam
             .getNumberOfRobotAlive()) {

@@ -68,8 +68,10 @@ class MinerBehaviour extends EntityBehaviour {
 
     // No Christal found, go fo default mining
     Coord nextFixedCoord = getNextFixedCoord();
-    if (nextFixedCoord.)
-    return returnAction(Action.move());
+    if (nextFixedCoord.distance(entity.pos) <= 2) {
+      return returnAction(Action.dig(nextFixedCoord));
+    }
+    return returnAction(Action.move(nextFixedCoord));
   }
 
   private Optional<Cell> getClosestInterestingOre() {

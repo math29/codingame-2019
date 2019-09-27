@@ -24,7 +24,9 @@ class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
             .getNumberOfRobotAlive()
             && robot.id == getBestMatchNextScoutRobotId().orElse(robot.id)) {
           this.behaviourMap.put(robot.id, new ScoutBehaviour(robot, board));
-        } else if (robot.isAlive() && this.getNumberOfSuicideBombers() < 1) {
+        } else if (robot.isAlive() && this.getNumberOfSuicideBombers() < 1
+            && this.board.myTeam.robots.stream().filter(Entity::isAlive).count() >= 2
+            && this.board.opponentTeam.robots.stream().filter(Entity::isAlive).count() >= 2 ) {
           this.behaviourMap.put(robot.id, new SuicideBomberBehaviour(robot, board));
         } else {
           this.behaviourMap.put(robot.id, new MinerBehaviour(robot, board));

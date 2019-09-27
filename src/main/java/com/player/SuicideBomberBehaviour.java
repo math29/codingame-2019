@@ -1,16 +1,16 @@
 package com.player;
 
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-
 import java.util.ArrayList;
 import java.util.List;
+
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
 
 class SuicideBomberBehaviour extends EntityBehaviour {
 
@@ -21,13 +21,15 @@ class SuicideBomberBehaviour extends EntityBehaviour {
 
   @Override Action getNextAction() {
 
-    if (entity.isAtHeadquarters() && entity.item == EntityType.NOTHING) {
-      return returnAction(Action.request(EntityType.TRAP));
-    }
-
-    if (enemiesInRange().size() >= 3) {
+    System.err.println("enemiesInRange(): " + enemiesInRange().size());
+    System.err.println("alliesInRange(): " + alliesInRange().size());
+    if (enemiesInRange().size() > alliesInRange().size()) {
       Coord coordToBomb = getClosestExplodingCell().coord;
       return returnAction(Action.dig(coordToBomb));
+    }
+
+    if (entity.isAtHeadquarters() && entity.item == EntityType.NOTHING) {
+      return returnAction(Action.request(EntityType.TRAP));
     }
 
     if (entity.item == EntityType.TRAP) {
@@ -46,36 +48,46 @@ class SuicideBomberBehaviour extends EntityBehaviour {
     List<Entity> enemyCloseToBombs = new ArrayList<>();
 
     board.opponentTeam.robots.forEach(enemyRobot -> {
-      if (enemyCloseToBombs(enemyRobot)) {
+      if (isCloseToBombs(enemyRobot)) {
         enemyCloseToBombs.add(enemyRobot);
       }
     });
 
     return enemyCloseToBombs;
-
   }
 
-  private boolean enemyCloseToBombs(final Entity robot) {
-    return  board.myTrapPos.stream().anyMatch(trapPosition -> (trapPosition.x == robot.pos.x + 1 || trapPosition.x == robot.pos.x - 1 || trapPosition.x == robot.pos.x) && (
-        trapPosition.y == robot.pos.y + 1 || trapPosition.y == robot.pos.y - 1 || trapPosition.y == robot.pos.y));
+  private List<Entity> alliesInRange() {
+    List<Entity> alliesInRange = new ArrayList<>();
 
+    board.myTeam.robots.forEach(robot -> {
+      if (isCloseToBombs(robot)) {
+        alliesInRange.add(robot);
+      }
+    });
+
+    return alliesInRange;
+  }
+
+  private boolean isCloseToBombs(final Entity robot) {
+    return board.myTrapPos.stream().anyMatch(trapPosition -> (
+        (trapPosition.x == robot.pos.x && trapPosition.y == robot.pos.y)
+            || (trapPosition.x == robot.pos.x && (trapPosition.y == robot.pos.y - 1
+            || trapPosition.y == robot.pos.y + 1))
+            || (trapPosition.y == robot.pos.y && (trapPosition.x == robot.pos.x - 1
+            || trapPosition.x == robot.pos.x + 1))
+    ));
   }
 
 
   private Cell getClosestExplodingCell() {
     Cell closerCell = null;
-    int minDistance = 3;
-    for (int i = 1; i < this.entity.pos.x+2; i++) {
-      for (final Cell cell : board.getCellsOnColumn(this.entity.pos.x)) {
-        int distance = cell.coord.distance(this.entity.pos);
-        if (isCellBad(cell) && distance < minDistance && cell.hole) {
-          closerCell = cell;
-          minDistance = distance;
-        }
+    int minDistance = 10;
+    for (final Coord myTrapPo : this.board.myTrapPos) {
+      int distance = myTrapPo.distance(entity.pos);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closerCell = board.getCell(myTrapPo);
       }
-    }
-    if (closerCell == null) {
-      return board.getCell(new Coord(1, 1));
     }
     return closerCell;
   }

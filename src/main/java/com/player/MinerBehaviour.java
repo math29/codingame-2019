@@ -86,11 +86,12 @@ class MinerBehaviour extends EntityBehaviour {
   private Coord getNextFixedCoord() {
     return Arrays.stream(fixedCoord).filter(coord -> {
       Cell cell = board.getCell(coord);
-      return cell.hasOre() && !isCellBad(cell) && isCellAllyZoneSafe(cell);
+      return !cell.hasHole() && !isCellBad(cell) && isCellAllyZoneSafe(cell);
     }).findFirst().orElse(new Coord(0, 0));
   }
 
   private boolean isCellAllyZoneSafe(final Cell cell) {
-    return this.board.myTeam.robots.stream().noneMatch(robot -> cell.coord.distance(robot.pos) <= 2);
+    return true;
+//    return this.board.myTeam.robots.stream().noneMatch(robot -> cell.coord.distance(robot.pos) <= 2);
   }
 }

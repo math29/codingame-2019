@@ -18,20 +18,16 @@ abstract class BehaviourOrchestrator {
 
   protected Board board;
 
-  BehaviourOrchestrator(final Board board) {
-    this.board = board;
-    this.initializeBehaviours();
-  }
-
   abstract void setRobotBehaviours();
 
-  private void initializeBehaviours() {
+  void initializeBehaviours(final Board board) {
+    this.board = board;
     behaviourMap = new HashMap<>();
     for (final Entity robot : board.myTeam.robots) {
       if (robot.hasItem() && robot.item == EntityType.RADAR && robot.isAlive()) {
         this.behaviourMap.put(robot.id, new ScoutBehaviour(robot, board));
       } else if (robot.hasItem() && robot.item == EntityType.TRAP && robot.isAlive()) {
-        this.behaviourMap.put(robot.id, new BomberBehaviour(robot, board));
+        this.behaviourMap.put(robot.id, new SuicideBomberBehaviour(robot, board));
       } else if (robot.hasItem() && robot.item == EntityType.AMADEUSIUM && robot.isAlive()) {
         this.behaviourMap.put(robot.id, new MinerBehaviour(robot, board));
       } else {
@@ -52,6 +48,11 @@ abstract class BehaviourOrchestrator {
 
   protected int getNumberOfBombers() {
     return this.behaviourMap.values().stream().filter(entityBehaviour -> entityBehaviour instanceof BomberBehaviour)
+        .toArray().length;
+  }
+
+  protected int getNumberOfSuicideBombers() {
+    return this.behaviourMap.values().stream().filter(entityBehaviour -> entityBehaviour instanceof SuicideBomberBehaviour)
         .toArray().length;
   }
 }

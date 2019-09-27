@@ -32,6 +32,8 @@ class Player {
 
   final Scanner in = new Scanner(System.in);
 
+  BehaviourOrchestrator behaviourOrchestrator = new ClassicBehaviourOrchestrator();
+
   void run() {
     // Parse initial conditions
     Board board = new Board(in);
@@ -39,36 +41,7 @@ class Player {
     while (true) {
       // Parse current state of the game
       board.update(in);
-
-//       Insert your strategy here
-//      int index = 0;
-//      for (Entity robot : board.myTeam.robots) {
-//        switch (index) {
-//        case 0:
-//          robot.action = new ScoutBehaviour(robot, board).getNextAction();
-////          robot.action.message = "Scout Robot";
-//          break;
-//        case 1:
-//          robot.action = new BomberBehaviour(robot, board).getNextAction();
-////          robot.action.message = "Bomber Robot";
-//          break;
-//        case 2:
-//        case 3:
-//        case 4:
-//          robot.action = new MinerBehaviour(robot, board).getNextAction();
-////          robot.action.message = "Miner Robot";
-//          break;
-//        }
-//        index++;
-//      }
-//
-//      // Send your actions for this turn
-//      for (Entity robot : board.myTeam.robots) {
-//        System.out.println(robot.action);
-//      }
-
-      // Run Behaviour assignements
-      BehaviourOrchestrator behaviourOrchestrator = new ClassicBehaviourOrchestrator(board);
+      behaviourOrchestrator.initializeBehaviours(board);
       behaviourOrchestrator.setRobotBehaviours();
       for (EntityBehaviour behaviour : behaviourOrchestrator.behaviourMap.values()) {
         System.out.println(behaviour.getNextAction());

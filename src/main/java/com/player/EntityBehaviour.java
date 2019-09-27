@@ -2,6 +2,7 @@ package com.player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 // ------------------------------------------------------------------------
@@ -28,13 +29,14 @@ abstract class EntityBehaviour {
     return action.withMessage(this.NAME);
   }
 
-  Cell getCloserOreCell() {
-    Cell closerCell = board.getCell(this.getRandomSafeCoord(0, board.getWidth(), 0, board.getHeight()));
+  // Returns closest Ore Cell, null if none
+  Optional<Cell> getClosestOreCell() {
+    Optional<Cell> closerCell = Optional.empty();
     int minDistance = 50;
     for (final Cell cell : board.getCells()) {
       int distance = cell.coord.distance(this.entity.pos);
       if (cell.hasOre() && distance < minDistance && !isCellBad(cell)) {
-        closerCell = cell;
+        closerCell = Optional.of(cell);
         minDistance = distance;
       }
     }

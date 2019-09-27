@@ -32,7 +32,7 @@ class Player {
 
   final Scanner in = new Scanner(System.in);
 
-  BehaviourOrchestrator behaviourOrchestrator = new ClassicBehaviourOrchestrator();
+  private BehaviourOrchestrator behaviourOrchestrator = new ClassicBehaviourOrchestrator();
 
   void run() {
     // Parse initial conditions

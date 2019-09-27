@@ -2,6 +2,7 @@ package com.player;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 // ------------------------------------------------------------------------
@@ -74,6 +75,18 @@ class Board {
 
     List<Cell> getCells() {
         return Arrays.asList(flattenStream(this.cells).toArray(Cell[]::new));
+    }
+
+    List<Cell> getCellsOnColumn(int i) {
+        return Arrays.asList(getColumn(this.cells, i));
+    }
+
+    Cell[] getColumn(Cell[][] matrix, int index) {
+        Cell[] column = new Cell[matrix[0].length];
+        for(int i=0; i<column.length; i++){
+            column[i] = matrix[i][index];
+        }
+        return column;
     }
 
     List<Cell> getHeadQuarterCells() {

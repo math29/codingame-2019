@@ -46,7 +46,7 @@ class SuicideBomberBehaviour extends EntityBehaviour {
     List<Entity> enemyCloseToBombs = new ArrayList<>();
 
     board.opponentTeam.robots.forEach(enemyRobot -> {
-      if (enemyCloseToBombs(enemyRobot)) {
+      if (enemyInBombRange(enemyRobot)) {
         enemyCloseToBombs.add(enemyRobot);
       }
     });
@@ -55,12 +55,12 @@ class SuicideBomberBehaviour extends EntityBehaviour {
 
   }
 
-  private boolean enemyCloseToBombs(final Entity robot) {
-    return  board.myTrapPos.stream().anyMatch(trapPosition -> (trapPosition.x == robot.pos.x + 1 || trapPosition.x == robot.pos.x - 1 || trapPosition.x == robot.pos.x) && (
+  private boolean enemyInBombRange(final Entity robot) {
+    return board.myTrapPos.parallelStream().filter(trapPosition -> trapPosition.x == 1).anyMatch(trapPosition ->
+                                                                                                     (trapPosition.x == robot.pos.x + 1 || trapPosition.x == robot.pos.x - 1 || trapPosition.x == robot.pos.x) && (
         trapPosition.y == robot.pos.y + 1 || trapPosition.y == robot.pos.y - 1 || trapPosition.y == robot.pos.y));
 
   }
-
 
   private Cell getClosestExplodingCell() {
     Cell closerCell = null;

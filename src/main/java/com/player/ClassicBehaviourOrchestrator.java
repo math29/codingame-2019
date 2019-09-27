@@ -20,7 +20,7 @@ class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
       if (this.behaviourMap.get(robot.id) == null) {
         if (robot.isAlive()) {
           if (this.getNumberOfScouts() < 1
-              && board.getCells().stream().filter(cell -> cell.hasOre() && !isCellBad(cell)).count() < board.myTeam
+              && board.getCells().stream().filter(cell -> cell.hasOre() && !cell.hasHole() && !isCellBad(cell)).count() < board.myTeam
               .getNumberOfRobotAlive()
               && robot.id == getBestMatchNextScoutRobotId().orElse(robot.id)) {
             this.behaviourMap.put(robot.id, new ScoutBehaviour(robot, board));

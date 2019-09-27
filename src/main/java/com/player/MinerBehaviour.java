@@ -25,18 +25,12 @@ class MinerBehaviour extends EntityBehaviour {
     }
 
     // Miner is looking for christal
-    Optional<Cell> closestOre = Optional.empty();
+    Optional<Cell> closestOre;
     Optional<Cell> closestSafe = getClosestSafeInterestingOre();
     if (!closestSafe.isPresent()) {
       closestOre = this.getClosestInterestingOre();
-      if (closestOre.isPresent()) {
-        System.err.println(String.format("Closest cell: (%s,%s).",
-                closestOre.get().coord.x, closestOre.get().coord.y));
-      }
     } else {
       closestOre = closestSafe;
-      System.err.println(String.format("Closest safe cell: (%s,%s).",
-              closestOre.get().coord.x, closestOre.get().coord.y));
     }
 
     // Found some!
@@ -65,7 +59,7 @@ class MinerBehaviour extends EntityBehaviour {
               && distance < minDistance
               && !isCellBad(cell)
               && isCellAllyZoneSafe(cell)
-              && Action.IsDiggedByUs(cell.coord)) {
+              && !cell.hasHole()) {
         closerCell = Optional.of(cell);
         minDistance = distance;
       }

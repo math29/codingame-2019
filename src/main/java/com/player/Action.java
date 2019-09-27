@@ -36,8 +36,6 @@ class Action {
 
     static Action dig(Coord pos) {
         posDigged.add(pos);
-        System.err.println(String.format("I dig: (%s,%s). Totally digged: %s.", pos.x, pos.y, posDigged.size()));
-
         return new Action("DIG", pos, null);
     }
 

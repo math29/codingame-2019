@@ -25,7 +25,13 @@ class MinerBehaviour extends EntityBehaviour {
     }
 
     // Miner is looking for christal
-    Optional<Cell> closestOre = this.getClosestInterestingOre();
+    Optional<Cell> closestOre = Optional.empty();
+    Optional<Cell> closestSafe = getClosestSafeInterestingOre();
+    if (!closestSafe.isPresent()) {
+      closestOre = this.getClosestInterestingOre();
+    } else {
+      closestOre = closestSafe;
+    }
 
     // Found some!
     if (closestOre.isPresent()) {
@@ -44,12 +50,32 @@ class MinerBehaviour extends EntityBehaviour {
     return returnAction(Action.move(nextFixedCoord));
   }
 
+  private Optional<Cell> getClosestSafeInterestingOre() {
+    Optional<Cell> closerCell = Optional.empty();
+    int minDistance = 50;
+    for (final Cell cell : board.getCells()) {
+      int distance = cell.coord.distance(this.entity.pos);
+      if (cell.hasOre()
+              && distance < minDistance
+              && !isCellBad(cell)
+              && isCellAllyZoneSafe(cell)
+              && Action.IsDiggedByUs(cell.coord)) {
+        closerCell = Optional.of(cell);
+        minDistance = distance;
+      }
+    }
+    return closerCell;
+  }
+
   private Optional<Cell> getClosestInterestingOre() {
     Optional<Cell> closerCell = Optional.empty();
     int minDistance = 50;
     for (final Cell cell : board.getCells()) {
       int distance = cell.coord.distance(this.entity.pos);
-      if (cell.hasOre() && distance < minDistance && !isCellBad(cell) && isCellAllyZoneSafe(cell)) {
+      if (cell.hasOre()
+              && distance < minDistance
+              && !isCellBad(cell)
+              && isCellAllyZoneSafe(cell)) {
         closerCell = Optional.of(cell);
         minDistance = distance;
       }

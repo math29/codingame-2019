@@ -18,18 +18,21 @@ class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
   @Override void setRobotBehaviours() {
     for (final Entity robot : board.myTeam.robots) {
       if (this.behaviourMap.get(robot.id) == null) {
-        if (robot.isAlive()
-            && this.getNumberOfScouts() < 1
-            && board.getCells().stream().filter(cell -> cell.hasOre() && !isCellBad(cell)).count() < board.myTeam
-            .getNumberOfRobotAlive()
-            && robot.id == getBestMatchNextScoutRobotId().orElse(robot.id)) {
-          this.behaviourMap.put(robot.id, new ScoutBehaviour(robot, board));
-        } else if (robot.isAlive() && this.getNumberOfSuicideBombers() < 1
-            && this.board.myTeam.robots.stream().filter(Entity::isAlive).count() >= 2
-            && this.board.opponentTeam.robots.stream().filter(Entity::isAlive).count() >= 2 ) {
-          this.behaviourMap.put(robot.id, new SuicideBomberBehaviour(robot, board));
+        if (robot.isAlive()) {
+          if (this.getNumberOfScouts() < 1
+              && board.getCells().stream().filter(cell -> cell.hasOre() && !isCellBad(cell)).count() < board.myTeam
+              .getNumberOfRobotAlive()
+              && robot.id == getBestMatchNextScoutRobotId().orElse(robot.id)) {
+            this.behaviourMap.put(robot.id, new ScoutBehaviour(robot, board));
+          } else if (robot.isAlive() && this.getNumberOfSuicideBombers() < 1
+              && this.board.myTeam.robots.stream().filter(Entity::isAlive).count() >= 2
+              && this.board.opponentTeam.robots.stream().filter(Entity::isAlive).count() >= 2 ) {
+            this.behaviourMap.put(robot.id, new SuicideBomberBehaviour(robot, board));
+          } else {
+            this.behaviourMap.put(robot.id, new MinerBehaviour(robot, board));
+          }
         } else {
-          this.behaviourMap.put(robot.id, new MinerBehaviour(robot, board));
+          this.behaviourMap.put(robot.id, new LazyBehaviour(robot, board));
         }
       }
     }

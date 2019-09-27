@@ -37,8 +37,8 @@ class MinerBehaviour extends EntityBehaviour {
     }
 
     // No Christal found, go fo default mining
-    Coord nextFixedCoord = getNextMoveForward();
-    if (this.board.getCell(new Coord(entity.pos.x + 1, 15 - this.entity.id)).coord.distance(this.entity.pos) <= 2) {
+    Coord nextFixedCoord = new Coord(entity.pos.x + 1, entity.pos.y);
+    if (!this.board.getCell(nextFixedCoord).hasHole()) {
       return returnAction(Action.dig(nextFixedCoord));
     }
     return returnAction(Action.move(nextFixedCoord));
@@ -55,10 +55,6 @@ class MinerBehaviour extends EntityBehaviour {
       }
     }
     return closerCell;
-  }
-
-  private Coord getNextMoveForward() {
-    return new Coord(this.entity.pos.x + 2, 15 - this.entity.id);
   }
 
   private boolean isCellAllyZoneSafe(final Cell cell) {

@@ -1,6 +1,5 @@
 package com.player;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 // ------------------------------------------------------------------------
@@ -13,35 +12,6 @@ import java.util.Optional;
 // ------------------------------------------------------------------------
 
 class MinerBehaviour extends EntityBehaviour {
-
-  private static final Coord[] fixedCoord = {
-      new Coord(2, 7),
-      new Coord(2, 8),
-      new Coord(2, 9),
-      new Coord(2, 10),
-      new Coord(2, 11),
-      new Coord(2, 12),
-      new Coord(2, 13),
-      new Coord(2, 14),
-      new Coord(3, 8),
-      new Coord(3, 9),
-      new Coord(3, 10),
-      new Coord(3, 11),
-      new Coord(3, 12),
-      new Coord(3, 13),
-      new Coord(3, 14),
-      new Coord(4, 9),
-      new Coord(4, 10),
-      new Coord(4, 11),
-      new Coord(4, 12),
-      new Coord(4, 13),
-      new Coord(4, 14),
-      new Coord(5, 10),
-      new Coord(5, 11),
-      new Coord(5, 12),
-      new Coord(5, 13),
-      new Coord(5, 14),
-  };
 
   MinerBehaviour(final Entity entity, final Board board) {
     super(entity, board);
@@ -67,8 +37,8 @@ class MinerBehaviour extends EntityBehaviour {
     }
 
     // No Christal found, go fo default mining
-    Coord nextFixedCoord = getNextFixedCoord();
-    if (nextFixedCoord.distance(entity.pos) <= 2) {
+    Coord nextFixedCoord = getNextMoveForward();
+    if (this.board.getCell(new Coord(entity.pos.x + 1, 15 - this.entity.id)).coord.distance(this.entity.pos) <= 2) {
       return returnAction(Action.dig(nextFixedCoord));
     }
     return returnAction(Action.move(nextFixedCoord));
@@ -87,11 +57,8 @@ class MinerBehaviour extends EntityBehaviour {
     return closerCell;
   }
 
-  private Coord getNextFixedCoord() {
-    return Arrays.stream(fixedCoord).filter(coord -> {
-      Cell cell = board.getCell(coord);
-      return !cell.hasHole() && !isCellBad(cell) && isCellAllyZoneSafe(cell);
-    }).findFirst().orElse(new Coord(0, 0));
+  private Coord getNextMoveForward() {
+    return new Coord(this.entity.pos.x + 2, 15 - this.entity.id);
   }
 
   private boolean isCellAllyZoneSafe(final Cell cell) {

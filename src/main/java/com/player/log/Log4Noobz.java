@@ -1,19 +1,10 @@
-package com.player;
+package com.player.log;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-
-class Log4Noobz {
+public class Log4Noobz {
 
   private int textNumber;
 
@@ -32,35 +23,35 @@ class Log4Noobz {
       "This bot went through no CCB! :(",
   };
 
-  Log4Noobz() {
+  public Log4Noobz() {
     textNumber = (int)(Math.random() * NOOB_ROLLING_MESSAGES.length);
     windowSize = 10;
     framesBeforeUpdate = 1 + 80 / NOOB_ROLLING_MESSAGES[textNumber].length();
   }
 
-  Log4Noobz(int windowSize) {
+  public Log4Noobz(int windowSize) {
     textNumber = (int)(Math.random() * NOOB_ROLLING_MESSAGES.length);
     this.windowSize = windowSize;
     framesBeforeUpdate = 1 + 80 / NOOB_ROLLING_MESSAGES[textNumber].length();
   }
 
-  Log4Noobz(int windowSize, int framesBeforeUpdate) {
+  public Log4Noobz(int windowSize, int framesBeforeUpdate) {
     textNumber = (int)(Math.random() * NOOB_ROLLING_MESSAGES.length);
     this.windowSize = windowSize;
     this.framesBeforeUpdate = Math.max(1, framesBeforeUpdate);
   }
 
-  Log4Noobz(int textNumber, int windowSize, int framesBeforeUpdate) {
+  public Log4Noobz(int textNumber, int windowSize, int framesBeforeUpdate) {
     this.textNumber = textNumber;
     this.windowSize = windowSize;
     this.framesBeforeUpdate = Math.max(1, framesBeforeUpdate);
   }
 
-  String getRollingText() {
+  public String getRollingText() {
     return getRollingText(iterations);
   }
 
-  String getRollingText(int iteration) {
+  public String getRollingText(int iteration) {
     if (windowSize >= NOOB_ROLLING_MESSAGES[textNumber].length()) {
       return NOOB_ROLLING_MESSAGES[textNumber];
     }

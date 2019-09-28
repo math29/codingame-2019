@@ -1,4 +1,4 @@
-# Illegal Exception - Unleash the Geek 2019
+# Unleash the Geek 2019
 
 ## Getting started
 
@@ -10,9 +10,7 @@ Once your test are passing, run `./.tools/build.sh` script to get your unique ja
 
 ## Development guidelines
 
-The script which concatenate only reads player package, if you need more packages, modify accordingly the script.
-
-You only can use private-package classes
+The script which concatenate is introspecting packages under `com.player.*`
 
 ## Game rules
 

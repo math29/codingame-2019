@@ -1,40 +1,39 @@
-package com.player;
+package com.player.behaviours;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
+import com.player.model.Action;
+import com.player.model.Board;
+import com.player.model.Cell;
+import com.player.model.Coord;
+import com.player.model.Entity;
 
-abstract class EntityBehaviour {
+public abstract class EntityBehaviour {
 
   protected Entity entity;
   protected Board board;
   protected String NAME;
 
-  EntityBehaviour(final Entity entity, final Board board) {
+  public EntityBehaviour(final Entity entity, final Board board) {
     this.entity = entity;
     this.board = board;
   }
 
-  abstract Action getNextAction();
+  public abstract Action getNextAction();
 
   Action returnAction(final Action action) {
     return action.withMessage(this.NAME);
   }
 
   // Returns closest Ore Cell, null if none
-  Optional<Cell> getClosestOreCell() {
+  protected Optional<Cell> getClosestOreCell() {
     Optional<Cell> closerCell = Optional.empty();
     int minDistance = 50;
     for (final Cell cell : board.getCells()) {
-      int distance = cell.coord.distance(this.entity.pos);
+      int distance = cell.getCoord().distance(this.entity.getPos());
       if (cell.hasOre() && distance < minDistance && !isCellBad(cell)) {
         closerCell = Optional.of(cell);
         minDistance = distance;
@@ -43,12 +42,11 @@ abstract class EntityBehaviour {
     return closerCell;
   }
 
-
-  Cell getCloserHeadQuarterCell() {
+  protected Cell getCloserHeadQuarterCell() {
     Cell closerCell = board.getCell(new Coord(0, 0));
     int minDistance = 50;
     for (final Cell cell : board.getHeadQuarterCells()) {
-      int distance = cell.coord.distance(this.entity.pos);
+      int distance = cell.getCoord().distance(this.entity.getPos());
       if (distance < minDistance) {
         closerCell = cell;
         minDistance = distance;
@@ -57,7 +55,7 @@ abstract class EntityBehaviour {
     return closerCell;
   }
 
-  Coord getRandomSafeCoord(int startX, int endX, int startY, int endY) {
+  protected Coord getRandomSafeCoord(int startX, int endX, int startY, int endY) {
     Coord coord = getRandomCoord(startX, endX, startY, endY);
     if (!isCellBad(board.getCell(coord))) {
       return coord;
@@ -72,11 +70,11 @@ abstract class EntityBehaviour {
     return new Coord(x, y);
   }
 
-  boolean isInsideRadarOrTrapZone() {
-    return this.entity.pos.x >= 5
-            && this.entity.pos.x < board.getWidth() - 3
-            && this.entity.pos.y >= 4
-            && this.entity.pos.y < board.getHeight() - 3;
+  protected boolean isInsideRadarOrTrapZone() {
+    return this.entity.getPos().getX() >= 5
+        && this.entity.getPos().getX() < board.getWidth() - 3
+        && this.entity.getPos().getY() >= 4
+        && this.entity.getPos().getY() < board.getHeight() - 3;
   }
 
   protected List<Cell> getBadCells(Board board) {
@@ -91,18 +89,19 @@ abstract class EntityBehaviour {
   }
 
   protected boolean isCellBad(final Cell cell) {
-    if(board.myTrapPos.isEmpty()){
+    if (board.getMyTrapPos().isEmpty()) {
       return false;
     }
-    Coord cellOptional = board.myTrapPos.parallelStream()
-        .filter(trapCoord -> trapCoord.x == cell.coord.x && trapCoord.y == cell.coord.y).findFirst()
+    Coord cellOptional = board.getMyTrapPos().parallelStream()
+        .filter(trapCoord -> trapCoord.getX() == cell.getCoord().getX() && trapCoord.getY() == cell.getCoord().getY())
+        .findFirst()
         .orElse(null);
     return cellOptional != null;
   }
 
-  boolean isCellRadarFree(final Cell cell) {
-    Coord cellOptional = board.myRadarPos.parallelStream()
-            .filter(coord -> coord.x == cell.coord.x && coord.y == cell.coord.y).findFirst()
+  protected boolean isCellRadarFree(final Cell cell) {
+    Coord cellOptional = board.getMyRadarPos().parallelStream()
+        .filter(coord -> coord.getX() == cell.getCoord().getX() && coord.getY() == cell.getCoord().getY()).findFirst()
             .orElse(null);
     return cellOptional == null;
   }

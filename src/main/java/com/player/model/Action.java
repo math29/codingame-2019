@@ -1,22 +1,13 @@
-package com.player;
+package com.player.model;
 
 import java.util.HashSet;
 import java.util.Set;
 
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-
-class Action {
-    final String command;
-    final Coord pos;
-    final EntityType item;
-    String message;
+public class Action {
+    private final String command;
+    private final Coord pos;
+    private final EntityType item;
+    private String message;
 
     private static Set<Coord> posDigged = new HashSet<>();
 
@@ -26,24 +17,24 @@ class Action {
         this.item = item;
     }
 
-    static Action none() {
+    public static Action none() {
         return new Action("WAIT", null, null);
     }
 
-    static Action move(Coord pos) {
+    public static Action move(Coord pos) {
         return new Action("MOVE", pos, null);
     }
 
-    static Action dig(Coord pos) {
+    public static Action dig(Coord pos) {
         posDigged.add(pos);
         return new Action("DIG", pos, null);
     }
 
-    static Action request(EntityType item) {
+    public static Action request(EntityType item) {
         return new Action("REQUEST", null, item);
     }
 
-    static boolean IsDiggedByUs(Coord pos) {
+    public static boolean IsDiggedByUs(Coord pos) {
         return posDigged.contains(pos);
     }
 

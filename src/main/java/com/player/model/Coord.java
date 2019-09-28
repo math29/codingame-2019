@@ -1,47 +1,45 @@
-package com.player;
+package com.player.model;
 
 import java.util.Scanner;
 
-import static java.lang.Math.abs;
+public class Coord {
+    private final int x;
 
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
+    private final int y;
 
-class Coord {
-    final int x;
-    final int y;
-
-    Coord(int x, int y) {
+    public Coord(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    Coord(Scanner in) {
+    public Coord(Scanner in) {
         this(in.nextInt(), in.nextInt());
     }
 
-    Coord add(Coord other) {
+    public Coord add(Coord other) {
         return new Coord(x + other.x, y + other.y);
     }
 
     // Manhattan distance (for 4 directions maps)
     // see: https://en.wikipedia.org/wiki/Taxicab_geometry
-    int distance(Coord other) {
+
+    public int distance(Coord other) {
         return Math.abs(x - other.x) + Math.abs(y - other.y);
     }
-
     public int hashCode() {
         final int PRIME = 31;
         int result = 1;
         result = PRIME * result + x;
         result = PRIME * result + y;
         return result;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public boolean equals(Object obj) {

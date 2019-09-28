@@ -3,6 +3,8 @@ package com.player;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.player.log.Log4Noobz;
+
 class Log4NoobzTest {
 
   @Test

@@ -1,27 +1,24 @@
-package com.player;
+package com.player.behaviours;
 
 import java.util.Optional;
 
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
+import com.player.model.Action;
+import com.player.model.Board;
+import com.player.model.Cell;
+import com.player.model.Coord;
+import com.player.model.Entity;
 
-class MinerBehaviour extends EntityBehaviour {
+public class MinerBehaviour extends EntityBehaviour {
 
-  MinerBehaviour(final Entity entity, final Board board) {
+  public MinerBehaviour(final Entity entity, final Board board) {
     super(entity, board);
     this.NAME = "Miner";
   }
 
-  @Override Action getNextAction() {
+  @Override public Action getNextAction() {
     // Miner has cristal on him else go to mine
     if (entity.hasItem()) {
-      return returnAction(Action.move(this.getCloserHeadQuarterCell().coord));
+      return returnAction(Action.move(this.getCloserHeadQuarterCell().getCoord()));
     }
 
     // Miner is looking for christal
@@ -35,15 +32,15 @@ class MinerBehaviour extends EntityBehaviour {
 
     // Found some!
     if (closestOre.isPresent()) {
-      if (closestOre.get().coord.distance(entity.pos) <= 2) {
-        return returnAction(Action.dig(closestOre.get().coord));
+      if (closestOre.get().getCoord().distance(entity.getPos()) <= 2) {
+        return returnAction(Action.dig(closestOre.get().getCoord()));
       } else {
-        return returnAction(Action.move(closestOre.get().coord));
+        return returnAction(Action.move(closestOre.get().getCoord()));
       }
     }
 
     // No Christal found, go fo default mining
-    Coord nextFixedCoord = new Coord(entity.pos.x + 1, entity.pos.y);
+    Coord nextFixedCoord = new Coord(entity.getPos().getX() + 1, entity.getPos().getY());
     if (!this.board.getCell(nextFixedCoord).hasHole()) {
       return returnAction(Action.dig(nextFixedCoord));
     }
@@ -54,7 +51,7 @@ class MinerBehaviour extends EntityBehaviour {
     Optional<Cell> closerCell = Optional.empty();
     int minDistance = 50;
     for (final Cell cell : board.getCells()) {
-      int distance = cell.coord.distance(this.entity.pos);
+      int distance = cell.getCoord().distance(this.entity.getPos());
       if (cell.hasOre()
               && distance < minDistance
               && !isCellBad(cell)
@@ -71,7 +68,7 @@ class MinerBehaviour extends EntityBehaviour {
     Optional<Cell> closerCell = Optional.empty();
     int minDistance = 50;
     for (final Cell cell : board.getCells()) {
-      int distance = cell.coord.distance(this.entity.pos);
+      int distance = cell.getCoord().distance(this.entity.getPos());
       if (cell.hasOre()
               && distance < minDistance
               && !isCellBad(cell)

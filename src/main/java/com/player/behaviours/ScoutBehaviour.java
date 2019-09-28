@@ -1,19 +1,16 @@
-package com.player;
+package com.player.behaviours;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
-// ------------------------------------------------------------------------
+import com.player.model.Action;
+import com.player.model.Board;
+import com.player.model.Coord;
+import com.player.model.Entity;
+import com.player.model.EntityType;
 
-class ScoutBehaviour extends EntityBehaviour {
+public class ScoutBehaviour extends EntityBehaviour {
 
     private static final List<Coord> scoutCoord = Collections.unmodifiableList(
             new ArrayList<Coord>() {{
@@ -41,39 +38,39 @@ class ScoutBehaviour extends EntityBehaviour {
                 add(new Coord(16, 11));
             }});
 
-    ScoutBehaviour(final Entity entity, final Board board) {
+  public ScoutBehaviour(final Entity entity, final Board board) {
         super(entity, board);
         this.NAME = "Scout";
     }
 
-    @Override Action getNextAction() {
+  @Override public Action getNextAction() {
         Coord coordToUse = getScoutCoord();
 
         // If Scout is at the headquarters and carries nothing, take RADAR
-        if (entity.isAtHeadquarters() && entity.item == EntityType.NOTHING) {
+    if (entity.isAtHeadquarters() && entity.getItem() == EntityType.NOTHING) {
             return returnAction(Action.request(EntityType.RADAR));
         }
 
         // If Scout is with RADAR in radar safe zone, dig it in the ground
-        if (entity.item == EntityType.RADAR
-            && coordToUse.distance(entity.pos) <= 2
+    if (entity.getItem() == EntityType.RADAR
+        && coordToUse.distance(entity.getPos()) <= 2
             && !isCellBad(board.getCell(coordToUse))) {
             return returnAction(Action.dig(coordToUse));
         }
 
         // move
-        if (entity.item == EntityType.RADAR) {
+    if (entity.getItem() == EntityType.RADAR) {
             return returnAction(Action.move(coordToUse));
         }
 
         // Return to headquarters for the new RADAR
-        return returnAction(Action.move(getCloserHeadQuarterCell().coord));
+    return returnAction(Action.move(getCloserHeadQuarterCell().getCoord()));
     }
 
     private Coord getScoutCoord() {
         // Find the first unknown cell
         return scoutCoord.stream()
-                .filter(c -> !board.getCell(c).known)
+            .filter(c -> !board.getCell(c).isKnown())
                 .findFirst()
                 // Normally, this should not happen
                 .orElse(getNextRadarTarget(5,
@@ -98,8 +95,8 @@ class ScoutBehaviour extends EntityBehaviour {
     }
 
     private boolean isCoordOutsideRadarCoverrage(final Coord coord) {
-        return this.board.myRadarPos.stream()
+      return this.board.getMyRadarPos().stream()
                 .noneMatch(rCoord ->
-                        isInside(rCoord.x, rCoord.y, 4, coord.x, coord.y));
+                               isInside(rCoord.getX(), rCoord.getY(), 4, coord.getX(), coord.getY()));
     }
 }

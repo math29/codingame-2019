@@ -41,7 +41,7 @@ public class MinerBehaviour extends EntityBehaviour {
 
     // No Christal found, go fo default mining
     Coord nextFixedCoord = new Coord(entity.getPos().getX() + 1, entity.getPos().getY());
-    if (!this.board.getCell(nextFixedCoord).hasHole()) {
+    if (!this.board.getCell(nextFixedCoord).isHole()) {
       return returnAction(Action.dig(nextFixedCoord));
     }
     return returnAction(Action.move(nextFixedCoord));
@@ -54,9 +54,8 @@ public class MinerBehaviour extends EntityBehaviour {
       int distance = cell.getCoord().distance(this.entity.getPos());
       if (cell.hasOre()
               && distance < minDistance
-              && !isCellBad(cell)
-              && isCellAllyZoneSafe(cell)
-              && !cell.hasHole()) {
+              && !cell.hasAllyTrap(board)
+              && !cell.isHole()) {
         closerCell = Optional.of(cell);
         minDistance = distance;
       }
@@ -71,17 +70,11 @@ public class MinerBehaviour extends EntityBehaviour {
       int distance = cell.getCoord().distance(this.entity.getPos());
       if (cell.hasOre()
               && distance < minDistance
-              && !isCellBad(cell)
-              && isCellAllyZoneSafe(cell)) {
+              && !cell.hasAllyTrap(board)) {
         closerCell = Optional.of(cell);
         minDistance = distance;
       }
     }
     return closerCell;
-  }
-
-  private boolean isCellAllyZoneSafe(final Cell cell) {
-    return true;
-//    return this.board.myTeam.robots.stream().noneMatch(robot -> cell.coord.distance(robot.pos) <= 2);
   }
 }

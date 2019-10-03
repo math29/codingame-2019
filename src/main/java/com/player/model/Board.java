@@ -11,11 +11,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Board {
-    // Given at startup
     private final int width;
     private final int height;
 
-    // Updated each turn
     private final Team myTeam = new Team();
     private final Team opponentTeam = new Team();
     private Cell[][] cells;
@@ -33,7 +31,6 @@ public class Board {
     }
 
     public void update(Scanner in) {
-        // Read new data
         myTeam.readScore(in);
         opponentTeam.readScore(in);
         cells = new Cell[height][width];

@@ -7,15 +7,12 @@ public class Cell {
 
     private int ore;
     private boolean hole;
-    // @TODO: use this property
-    private boolean safe;
     private Coord coord;
 
-    Cell(boolean known, int ore, boolean hole, boolean safe) {
+    Cell(boolean known, int ore, boolean hole) {
         this.known = known;
         this.ore = ore;
         this.hole = hole;
-        this.safe = safe;
     }
 
     Cell(Scanner in, final Coord coord) {
@@ -46,10 +43,6 @@ public class Cell {
 
     public boolean isHole() {
         return hole;
-    }
-
-    public boolean isSafe() {
-        return safe;
     }
 
     public Coord getCoord() {

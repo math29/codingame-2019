@@ -27,47 +27,38 @@ class CellTest {
 
     @Test
     void hasOre() {
-        this.cell = new Cell(true, 3, false, true);
+        this.cell = new Cell(true, 3, false);
         Assertions.assertTrue(cell.hasOre());
 
-        this.cell = new Cell(true, 0, false, true);
+        this.cell = new Cell(true, 0, false);
         Assertions.assertFalse(cell.hasOre());
     }
 
     @Test
     void isKnown() {
-        this.cell = new Cell(true, 3, true, true);
+        this.cell = new Cell(true, 3, true);
         Assertions.assertTrue(cell.isKnown());
 
-        this.cell = new Cell(false, 0, true, true);
+        this.cell = new Cell(false, 0, true);
         Assertions.assertFalse(cell.isKnown());
     }
 
     @Test
     void getOre() {
-        this.cell = new Cell(true, 3, true, true);
+        this.cell = new Cell(true, 3, true);
         Assertions.assertEquals(3, cell.getOre());
 
-        this.cell = new Cell(false, 0, true, true);
+        this.cell = new Cell(false, 0, true);
         Assertions.assertEquals(0, cell.getOre());
     }
 
     @Test
     void isHole() {
-        this.cell = new Cell(true, 3, true, true);
+        this.cell = new Cell(true, 3, true);
         Assertions.assertTrue(cell.isHole());
 
-        this.cell = new Cell(true, 0, false, true);
+        this.cell = new Cell(true, 0, false);
         Assertions.assertFalse(cell.isHole());
-    }
-
-    @Test
-    void isSafe() {
-        this.cell = new Cell(true, 3, true, true);
-        Assertions.assertTrue(cell.isSafe());
-
-        this.cell = new Cell(true, 0, false, false);
-        Assertions.assertFalse(cell.isSafe());
     }
 
     @Test

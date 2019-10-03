@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.player.behaviours.EntityBehaviour;
 import com.player.model.Board;
+import com.player.model.History;
 import com.player.orchestrator.BehaviourOrchestrator;
 import com.player.orchestrator.ClassicBehaviourOrchestrator;
 
@@ -33,6 +34,7 @@ class Player {
       for (EntityBehaviour behaviour : behaviourOrchestrator.behaviourMap.values()) {
         System.out.println(behaviour.getNextAction());
       }
+      History.recordNewTurn(board);
     }
   }
 }

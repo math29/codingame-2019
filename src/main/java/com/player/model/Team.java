@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Team {
     private int score;
@@ -15,8 +16,11 @@ public class Team {
         robots = new ArrayList<>();
     }
 
+    public Collection<Entity> getRobotsAlive() {
+        return this.robots.stream().filter(Entity::isAlive).collect(Collectors.toList());
+    }
     public int getNumberOfRobotAlive() {
-        return (int) this.robots.stream().filter(Entity::isAlive).count();
+        return getRobotsAlive().size();
     }
 
     public int getScore() {

@@ -1,6 +1,5 @@
 package com.player.model;
 
-import java.util.Optional;
 import java.util.Scanner;
 
 public class Entity {
@@ -8,10 +7,12 @@ public class Entity {
     private static final Coord DEAD_POS = new Coord(-1, -1);
 
     private final int id;
-
     private final EntityType type;
     private final Coord pos;
     private final EntityType item;
+
+    // History specific properties
+    private boolean isTerroristSuspect = false;
 
     Action action;
 
@@ -48,6 +49,14 @@ public class Entity {
 
     public EntityType getItem() {
         return item;
+    }
+
+    public void tagAsTerroristSuspect() {
+        isTerroristSuspect = true;
+    }
+
+    public boolean isTerroristSuspect() {
+        return this.isTerroristSuspect;
     }
 
     public boolean isInsideRadarOrTrapZone(final Board board) {

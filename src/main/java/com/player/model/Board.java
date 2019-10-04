@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -58,6 +59,55 @@ public class Board {
                 myTrapPos.add(entity.getPos());
             }
         }
+        this.updateFromHistory();
+        this.analyseEnemyBehaviour();
+    }
+
+    private void updateFromHistory() {
+        Optional<Board> previousTurn = History.getPreviousTurn();
+        if (previousTurn.isPresent()) {
+            previousTurn.get().getCells().stream()
+                .filter(Cell::hasPotentialEnemyTrap)
+                .forEach(cell -> this.getCell(cell.getCoord()).setPotentialEnemyTrap());
+            previousTurn.get().getOpponentTeam().getRobotsAlive().stream()
+                .filter(Entity::isTerroristSuspect)
+                .forEach(entity -> this.getOpponentTeam().getRobot(entity.getId()).get().tagAsTerroristSuspect());
+        }
+    }
+
+    private void analyseEnemyBehaviour() {
+        this.setTerroristTags();
+        this.setEnemyTrapCellTags();
+    }
+
+    private void setTerroristTags() {
+        this.getOpponentTeam().getRobotsAlive().forEach(entity -> {
+            Optional<Board> previousTurn = History.getPreviousTurn();
+            if (previousTurn.isPresent()) {
+                Optional<Entity> previousEntityState = previousTurn.get().getOpponentTeam().getRobot(entity.getId());
+                if (previousEntityState.isPresent()
+                    && previousEntityState.get().isAtHeadquarters()
+                    && entity.isAtHeadquarters()) {
+                    entity.tagAsTerroristSuspect();
+                }
+            }
+        });
+    }
+
+    private void setEnemyTrapCellTags() {
+        this.getOpponentTeam().getRobotsAlive().forEach(entity -> {
+            Optional<Board> previousTurn = History.getPreviousTurn();
+            if (previousTurn.isPresent()) {
+                Optional<Entity> previousEntityState = previousTurn.get().getOpponentTeam().getRobot(entity.getId());
+                if (previousEntityState.isPresent()
+                    && entity.isTerroristSuspect()
+                    && !entity.isAtHeadquarters()
+                    && entity.getPos() == previousEntityState.get().getPos()
+                    && this.getCell(entity.getPos()).isHole()) {
+                    this.getCell(entity.getPos()).setPotentialEnemyTrap();
+                }
+            }
+        });
     }
 
     boolean cellExist(Coord pos) {

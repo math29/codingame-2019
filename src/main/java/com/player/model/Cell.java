@@ -9,6 +9,9 @@ public class Cell {
     private boolean hole;
     private Coord coord;
 
+    // History specific properties
+    private boolean potentialEnemyTrap = false;
+
     Cell(boolean known, int ore, boolean hole) {
         this.known = known;
         this.ore = ore;
@@ -47,6 +50,14 @@ public class Cell {
 
     public Coord getCoord() {
         return coord;
+    }
+
+    public boolean hasPotentialEnemyTrap() {
+        return this.potentialEnemyTrap;
+    }
+
+    public void setPotentialEnemyTrap() {
+        this.potentialEnemyTrap = true;
     }
 
     public boolean hasAllyTrap(final Board board) {

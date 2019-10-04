@@ -2,6 +2,7 @@ package com.player.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class History {
 
@@ -19,5 +20,16 @@ public class History {
 
     public static Map<Integer, Board> getTurns() {
         return turns;
+    }
+
+    public static void incrementTurn() {
+        numberOfTurns = numberOfTurns + 1;
+    }
+
+    public static Optional<Board> getPreviousTurn() {
+        if (numberOfTurns == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(turns.get(numberOfTurns - 1));
     }
 }

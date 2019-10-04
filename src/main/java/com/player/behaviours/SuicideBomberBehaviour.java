@@ -29,7 +29,7 @@ public class SuicideBomberBehaviour extends EntityBehaviour {
 
     if (entity.getItem() == EntityType.TRAP) {
       for (int i = 5; i < board.getHeight() - 2; i++) {
-        if (!isCellBad(board.getCell(new Coord(1, i)))) {
+        if (!board.getCell(new Coord(1, i)).hasAllyTrap(board)) {
           return returnAction(Action.dig(new Coord(1, i)));
         }
       }

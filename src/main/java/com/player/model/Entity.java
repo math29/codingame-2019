@@ -1,5 +1,6 @@
 package com.player.model;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Entity {
@@ -11,9 +12,9 @@ public class Entity {
     private final EntityType type;
     private final Coord pos;
     private final EntityType item;
-    // Computed for my robots
 
     Action action;
+
     Entity(Scanner in) {
         id = in.nextInt();
         type = EntityType.valueOf(in.nextInt());
@@ -47,5 +48,23 @@ public class Entity {
 
     public EntityType getItem() {
         return item;
+    }
+
+    public boolean isInsideRadarOrTrapZone(final Board board) {
+        return this.getPos().getX() >= 5
+                && this.getPos().getX() < board.getWidth() - 3
+                && this.getPos().getY() >= 4
+                && this.getPos().getY() < board.getHeight() - 3;
+    }
+
+    public int getDistanceFromClosestHeadQuarterCell(final Board board) {
+        int minDistance = 50;
+        for (final Cell cell : board.getHeadQuarterCells()) {
+            int distance = cell.getCoord().distance(this.getPos());
+            if (distance < minDistance) {
+                minDistance = distance;
+            }
+        }
+        return minDistance;
     }
 }

@@ -7,13 +7,12 @@ public class Cell {
 
     private int ore;
     private boolean hole;
-    private boolean safe;
     private Coord coord;
-    Cell(boolean known, int ore, boolean hole, boolean safe) {
+
+    Cell(boolean known, int ore, boolean hole) {
         this.known = known;
         this.ore = ore;
         this.hole = hole;
-        this.safe = safe;
     }
 
     Cell(Scanner in, final Coord coord) {
@@ -34,10 +33,6 @@ public class Cell {
         return this.ore > 0;
     }
 
-    public boolean hasHole() {
-        return this.hole;
-    }
-
     public boolean isKnown() {
         return known;
     }
@@ -50,11 +45,25 @@ public class Cell {
         return hole;
     }
 
-    public boolean isSafe() {
-        return safe;
-    }
-
     public Coord getCoord() {
         return coord;
+    }
+
+    public boolean hasAllyTrap(final Board board) {
+        if (board.getMyTrapPos().isEmpty()) {
+            return false;
+        }
+        Coord cellOptional = board.getMyTrapPos().parallelStream()
+                .filter(trapCoord -> trapCoord.getX() == this.getCoord().getX() && trapCoord.getY() == this.getCoord().getY())
+                .findFirst()
+                .orElse(null);
+        return cellOptional != null;
+    }
+
+    public boolean isRadarFree(final Board board) {
+        Coord cellOptional = board.getMyRadarPos().parallelStream()
+                .filter(coord -> coord.getX() == this.getCoord().getX() && coord.getY() == this.getCoord().getY()).findFirst()
+                .orElse(null);
+        return cellOptional == null;
     }
 }

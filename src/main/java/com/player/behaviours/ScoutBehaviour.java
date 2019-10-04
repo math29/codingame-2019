@@ -54,7 +54,7 @@ public class ScoutBehaviour extends EntityBehaviour {
         // If Scout is with RADAR in radar safe zone, dig it in the ground
     if (entity.getItem() == EntityType.RADAR
         && coordToUse.distance(entity.getPos()) <= 2
-            && !isCellBad(board.getCell(coordToUse))) {
+            && !board.getCell(coordToUse).hasAllyTrap(board)) {
             return returnAction(Action.dig(coordToUse));
         }
 
@@ -83,7 +83,7 @@ public class ScoutBehaviour extends EntityBehaviour {
     private Coord getNextRadarTarget(int startX, int endX, int startY, int endY, int deep) {
         Coord coord = getRandomCoord(startX, endX, startY, endY);
         if (isCoordOutsideRadarCoverrage(coord)
-            && !isCellBad(board.getCell(coord))){
+            && !board.getCell(coord).hasAllyTrap(board)){
             return coord;
         } else {
             // Should not happen

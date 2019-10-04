@@ -1,7 +1,9 @@
 package com.player.orchestrator;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.player.behaviours.BomberBehaviour;
 import com.player.behaviours.EntityBehaviour;
@@ -35,6 +37,13 @@ public abstract class BehaviourOrchestrator {
       }
     }
   }
+
+  List<Integer> getAvailableRobotIndexes() {
+    return this.behaviourMap.keySet().stream()
+            .filter(key -> behaviourMap.get(key) == null)
+            .collect(Collectors.toList());
+  }
+
 
   protected int getNumberOfMiners() {
     return this.behaviourMap.values().stream().filter(entityBehaviour -> entityBehaviour instanceof MinerBehaviour)

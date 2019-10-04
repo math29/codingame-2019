@@ -39,8 +39,10 @@ public class MinerBehaviour extends EntityBehaviour {
       }
     }
 
-    // No Christal found, go fo default mining
-    Coord nextFixedCoord = new Coord(entity.getPos().getX() + 1, entity.getPos().getY());
+    // No Christal found, go for default mining
+    int newX = entity.getPos().getX() + 1 < board.getWidth() ? entity.getPos().getX() + 1 : entity.getPos().getX() - 1;
+    int newY = entity.getPos().getY() + 1 < board.getHeight() ? entity.getPos().getY() + 1 : entity.getPos().getY() - 1;
+    Coord nextFixedCoord = new Coord(newX, newY);
     if (!this.board.getCell(nextFixedCoord).isHole()) {
       return returnAction(Action.dig(nextFixedCoord));
     }

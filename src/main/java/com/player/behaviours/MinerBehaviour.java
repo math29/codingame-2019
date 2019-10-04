@@ -40,7 +40,7 @@ public class MinerBehaviour extends EntityBehaviour {
     }
 
     if (entity.isAtHeadquarters()) {
-      return returnAction(Action.move(new Coord(entity.getPos().getX() + 1, entity.getPos().getY())));
+      return returnAction(Action.move(new Coord(entity.getPos().getX() + 8, entity.getPos().getY())));
     }
 
     // No christal found, go for default mining

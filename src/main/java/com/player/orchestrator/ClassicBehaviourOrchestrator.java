@@ -36,7 +36,7 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
     }
 
     private Optional<Integer> getBestMatchNextScoutRobotId() {
-        int minDistance = 50;
+        int minDistance = board.getWidth();
         Optional<Integer> closestRobotIndex = Optional.empty();
         for (final Integer availableRobotIndex : getAvailableRobotIndexes()) {
             Optional<Entity> robot = this.board.getMyTeam().getRobot(availableRobotIndex);

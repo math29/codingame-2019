@@ -39,7 +39,7 @@ public class BomberBehaviour extends EntityBehaviour {
 
   private Cell getCloserJuicyOreCell() {
     Cell closerCell = null;
-    int minDistance = 50;
+    int minDistance = board.getWidth();
     for (final Cell cell : board.getCells()) {
       int distance = cell.getCoord().distance(this.entity.getPos());
       if (cell.getOre() > 1 && distance < minDistance && !cell.hasAllyTrap(board) && !cell.isHole()) {

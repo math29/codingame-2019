@@ -25,7 +25,7 @@ public abstract class EntityBehaviour {
     // Returns closest Ore Cell, null if none
     Optional<Cell> getClosestOreCell() {
         Optional<Cell> closerCell = Optional.empty();
-        int minDistance = 50;
+        int minDistance = board.getWidth();
         for (final Cell cell : board.getCells()) {
             int distance = cell.getCoord().distance(this.entity.getPos());
             if (cell.hasOre() && distance < minDistance && !cell.hasAllyTrap(board)) {
@@ -38,7 +38,7 @@ public abstract class EntityBehaviour {
 
     Cell getCloserHeadQuarterCell() {
         Cell closerCell = board.getCell(new Coord(0, 0));
-        int minDistance = 50;
+        int minDistance = board.getWidth();
         for (final Cell cell : board.getHeadQuarterCells()) {
             int distance = cell.getCoord().distance(this.entity.getPos());
             if (distance < minDistance) {

@@ -18,15 +18,18 @@ public class SuicideBomberBehaviour extends EntityBehaviour {
   }
 
   @Override public Action getNextAction() {
+    // If there are more enemies than allies in a range of a TRAP(s), suicide for good!
     if (enemiesInRange().size() > alliesInRange().size()) {
       Coord coordToBomb = getClosestExplodingCell().getCoord();
       return returnAction(Action.dig(coordToBomb));
     }
 
+    // If Bomber is at the headquarters and carries nothing, take TRAP
     if (entity.isAtHeadquarters() && entity.getItem() == EntityType.NOTHING) {
       return returnAction(Action.request(EntityType.TRAP));
     }
 
+    // Bomber should put a TRAP
     if (entity.getItem() == EntityType.TRAP) {
       for (int i = 5; i < board.getHeight() - 2; i++) {
         if (!board.getCell(new Coord(1, i)).hasAllyTrap(board)) {
@@ -67,22 +70,24 @@ public class SuicideBomberBehaviour extends EntityBehaviour {
     return board.getMyTrapPos().stream().anyMatch(trapPosition -> (
         (trapPosition.getX() == robot.getPos().getX() && trapPosition.getY() == robot.getPos().getY())
             || (trapPosition.getX() == robot.getPos().getX() && (trapPosition.getY() == robot.getPos().getY() - 1
-            || trapPosition.getY() == robot.getPos().getY() + 1))
+                || trapPosition.getY() == robot.getPos().getY() + 1))
             || (trapPosition.getY() == robot.getPos().getY() && (trapPosition.getX() == robot.getPos().getX() - 1
-            || trapPosition.getX() == robot.getPos().getX() + 1))
+                || trapPosition.getX() == robot.getPos().getX() + 1))
     ));
   }
 
   private Cell getClosestExplodingCell() {
     Cell closerCell = null;
-    int minDistance = 10;
-    for (final Coord myTrapPo : this.board.getMyTrapPos()) {
-      int distance = myTrapPo.distance(entity.getPos());
+
+    int minDistance = board.getWidth();
+    for (final Coord myTrapPos : this.board.getMyTrapPos()) {
+      int distance = myTrapPos.distance(entity.getPos());
       if (distance < minDistance) {
         minDistance = distance;
-        closerCell = board.getCell(myTrapPo);
+        closerCell = board.getCell(myTrapPos);
       }
     }
+
     return closerCell;
   }
 }

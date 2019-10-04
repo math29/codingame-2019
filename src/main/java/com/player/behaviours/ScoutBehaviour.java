@@ -47,24 +47,24 @@ public class ScoutBehaviour extends EntityBehaviour {
         Coord coordToUse = getScoutCoord();
 
         // If Scout is at the headquarters and carries nothing, take RADAR
-    if (entity.isAtHeadquarters() && entity.getItem() == EntityType.NOTHING) {
+        if (entity.isAtHeadquarters() && entity.getItem() == EntityType.NOTHING) {
             return returnAction(Action.request(EntityType.RADAR));
         }
 
         // If Scout is with RADAR in radar safe zone, dig it in the ground
-    if (entity.getItem() == EntityType.RADAR
+        if (entity.getItem() == EntityType.RADAR
         && coordToUse.distance(entity.getPos()) <= 2
             && !board.getCell(coordToUse).hasAllyTrap(board)) {
             return returnAction(Action.dig(coordToUse));
         }
 
-        // move
-    if (entity.getItem() == EntityType.RADAR) {
+        // Scout should move now
+        if (entity.getItem() == EntityType.RADAR) {
             return returnAction(Action.move(coordToUse));
         }
 
         // Return to headquarters for the new RADAR
-    return returnAction(Action.move(getCloserHeadQuarterCell().getCoord()));
+        return returnAction(Action.move(getCloserHeadQuarterCell().getCoord()));
     }
 
     private Coord getScoutCoord() {

@@ -58,7 +58,7 @@ public class Entity {
     }
 
     public int getDistanceFromClosestHeadQuarterCell(final Board board) {
-        int minDistance = 50;
+        int minDistance = board.getWidth();
         for (final Cell cell : board.getHeadQuarterCells()) {
             int distance = cell.getCoord().distance(this.getPos());
             if (distance < minDistance) {

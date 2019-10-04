@@ -1,5 +1,6 @@
 package com.player.orchestrator;
 
+import com.player.behaviours.BomberBehaviour;
 import com.player.behaviours.ZombieBehaviour;
 import com.player.behaviours.MinerBehaviour;
 import com.player.behaviours.ScoutBehaviour;
@@ -12,6 +13,7 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
 
     @Override
     public void setRobotBehaviours() {
+
         for (final Entity robot : board.getMyTeam().getRobots()) {
             if (behaviourMap.get(robot.getId()) != null) {
                 continue;
@@ -23,6 +25,8 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
 
             // If we don't have a Scout
             if (this.getNumberOfScouts() == 0
+                    // and we waited for 5 turns
+                    && board.getMyRadarCooldown() == 0
                     // and we don't have much gold left
                     && board.getCells().stream()
                         .filter(cell -> cell.hasOre() && !cell.isHole() && !cell.hasAllyTrap(board))
@@ -34,12 +38,14 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
             }
 
             // If we don't have a Bomber
-            if (this.getNumberOfSuicideBombers() == 0
+            if (this.getNumberOfBombers() == 0
+                    // and we waited for 5 turns
+                    && board.getMyTrapCooldown() == 0
                     // and we have more than 2 robots alive
                     && this.board.getMyTeam().getRobots().stream().filter(Entity::isAlive).count() > 2
                     // and the enemy has more than 2 robots alive
                     && this.board.getOpponentTeam().getRobots().stream().filter(Entity::isAlive).count() >= 2) {
-                this.behaviourMap.put(robot.getId(), new SuicideBomberBehaviour(robot, board));
+                this.behaviourMap.put(robot.getId(), new BomberBehaviour(robot, board));
                 continue;
             }
 

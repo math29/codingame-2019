@@ -16,7 +16,7 @@ public class MinerBehaviour extends EntityBehaviour {
   }
 
   @Override public Action getNextAction() {
-    // Miner has cristal on him else go to mine
+    // Miner has cristal on him, bring it to headquarters
     if (entity.hasItem()) {
       return returnAction(Action.move(this.getCloserHeadQuarterCell().getCoord()));
     }
@@ -39,14 +39,18 @@ public class MinerBehaviour extends EntityBehaviour {
       }
     }
 
-    // No Christal found, go for default mining
-    int newX = entity.getPos().getX() + 1 < board.getWidth() ? entity.getPos().getX() + 1 : entity.getPos().getX() - 1;
-    int newY = entity.getPos().getY() + 1 < board.getHeight() ? entity.getPos().getY() + 1 : entity.getPos().getY() - 1;
-    Coord nextFixedCoord = new Coord(newX, newY);
-    if (!this.board.getCell(nextFixedCoord).isHole()) {
-      return returnAction(Action.dig(nextFixedCoord));
+    if (entity.isAtHeadquarters()) {
+      return returnAction(Action.move(new Coord(entity.getPos().getX() + 1, entity.getPos().getY())));
     }
-    return returnAction(Action.move(nextFixedCoord));
+
+    // No christal found, go for default mining
+    Coord fixedCoord = new Coord(entity.getPos().getX(), entity.getPos().getY());
+    while (board.getCell(fixedCoord).isHole()) {
+      int newX = fixedCoord.getX() + 1 < board.getWidth() ? fixedCoord.getX() + 1 : fixedCoord.getX() - 1;
+      int newY = fixedCoord.getY() < board.getHeight() ? fixedCoord.getY() : fixedCoord.getY() - 1;
+      fixedCoord = new Coord(newX, newY);
+    }
+    return returnAction(Action.dig(fixedCoord));
   }
 
   private Optional<Cell> getClosestSafeInterestingOre() {

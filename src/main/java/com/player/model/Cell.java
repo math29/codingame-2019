@@ -1,6 +1,11 @@
 package com.player.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Cell {
     private boolean known;
@@ -76,5 +81,20 @@ public class Cell {
                 .filter(coord -> coord.getX() == this.getCoord().getX() && coord.getY() == this.getCoord().getY()).findFirst()
                 .orElse(null);
         return cellOptional == null;
+    }
+
+    public Set<Cell> getNeighbourCells(final Board board) {
+        Set<Cell> neighbourhood = new HashSet<>();
+        Set<Coord> coords = new HashSet<>();
+        coords.add(new Coord(this.coord.getX(), this.coord.getY() + 1));
+        coords.add(new Coord(this.coord.getX(), this.coord.getY() - 1));
+        coords.add(new Coord(this.coord.getX() - 1, this.coord.getY()));
+        coords.add(new Coord(this.coord.getX() + 1, this.coord.getY()));
+        coords.forEach(coord -> {
+            if (board.cellExist(coord)) {
+                neighbourhood.add(board.getCell(coord));
+            }
+        });
+        return neighbourhood;
     }
 }

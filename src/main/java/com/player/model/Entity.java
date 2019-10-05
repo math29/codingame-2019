@@ -55,6 +55,10 @@ public class Entity {
         isTerroristSuspect = true;
     }
 
+    public void removeTagAsTerroristSuspect() {
+        isTerroristSuspect = false;
+    }
+
     public boolean isTerroristSuspect() {
         return this.isTerroristSuspect;
     }

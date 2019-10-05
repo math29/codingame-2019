@@ -8,15 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Board {
-    private final int width;
-    private final int height;
+public class Board implements Cloneable {
+    private int width;
+    private int height;
 
-    private final Team myTeam = new Team();
-    private final Team opponentTeam = new Team();
+    private Team myTeam = new Team();
+    private Team opponentTeam = new Team();
     private Cell[][] cells;
 
     private int myRadarCooldown;
@@ -102,12 +103,31 @@ public class Board {
                 if (previousEntityState.isPresent()
                     && entity.isTerroristSuspect()
                     && !entity.isAtHeadquarters()
-                    && entity.getPos() == previousEntityState.get().getPos()
-                    && this.getCell(entity.getPos()).isHole()) {
-                    this.getCell(entity.getPos()).setPotentialEnemyTrap();
+                    && entity.getPos().equals(previousEntityState.get().getPos())) {
+                    this.cellEnemyTrapNeighbourhoodAnalysis(this.getCell(entity.getPos()), previousTurn.get());
+                    entity.removeTagAsTerroristSuspect();
                 }
             }
         });
+    }
+
+    private void cellEnemyTrapNeighbourhoodAnalysis(final Cell cell, final Board previousTurn) {
+        Set<Cell> impactedCells = cell.getNeighbourCells(this);
+        impactedCells.add(cell);
+        Set<Cell> impactedHoles = impactedCells.stream().filter(Cell::isHole).collect(Collectors.toSet());
+        Set<Cell> previouslyHoles = impactedCells.stream()
+            .map(c -> previousTurn.getCell(c.getCoord()))
+            .filter(Cell::isHole)
+            .collect(Collectors.toSet());
+        if (impactedHoles.size() > previouslyHoles.size()) {
+            impactedCells.forEach(c -> {
+                if (!previouslyHoles.contains(c)) {
+                    c.setPotentialEnemyTrap();
+                }
+            });
+        } else {
+            impactedHoles.forEach(Cell::setPotentialEnemyTrap);
+        }
     }
 
     boolean cellExist(Coord pos) {
@@ -180,5 +200,26 @@ public class Board {
 
     public Collection<Coord> getMyTrapPos() {
         return myTrapPos;
+    }
+
+    public Board clone() throws CloneNotSupportedException {
+        Board clone = (Board) super.clone();
+        clone.myTeam = this.getMyTeam().clone();
+        clone.opponentTeam = this.getOpponentTeam().clone();
+        clone.cells = deepCloneCells(this.cells);
+        clone.entitiesById = new HashMap<>(this.getEntitiesById());
+        clone.myRadarPos = new ArrayList<>(this.getMyRadarPos());
+        clone.myTrapPos = new ArrayList<>(this.getMyTrapPos());
+        return clone;
+    }
+
+    private static Cell[][] deepCloneCells(Cell[][] input) {
+        if (input == null)
+            return null;
+        Cell[][] result = new Cell[input.length][];
+        for (int r = 0; r < input.length; r++) {
+            result[r] = input[r].clone();
+        }
+        return result;
     }
 }

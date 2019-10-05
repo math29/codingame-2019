@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class Team {
+public class Team implements Cloneable {
     private int score;
 
     private Collection<Entity> robots;
@@ -35,5 +35,9 @@ public class Team {
         return this.getRobots().stream()
                 .filter(entity -> entity.getId() == id)
                 .findFirst();
+    }
+
+    public Team clone() throws CloneNotSupportedException {
+        return (Team) super.clone();
     }
 }

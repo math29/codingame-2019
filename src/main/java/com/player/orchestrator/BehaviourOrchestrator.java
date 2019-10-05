@@ -31,7 +31,7 @@ public abstract class BehaviourOrchestrator {
         if (robot.getItem() == EntityType.RADAR) {
           behaviourMap.put(robot.getId(), new ScoutBehaviour(robot, board));
         } else if (robot.getItem() == EntityType.TRAP) {
-          behaviourMap.put(robot.getId(), new BomberBehaviour(robot, board));
+          behaviourMap.put(robot.getId(), new SuicideBomberBehaviour(robot, board));
         } else if (robot.getItem() == EntityType.AMADEUSIUM) {
           behaviourMap.put(robot.getId(), new MinerBehaviour(robot, board));
         }

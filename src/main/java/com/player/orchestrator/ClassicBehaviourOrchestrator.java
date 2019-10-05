@@ -38,14 +38,14 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
             }
 
             // If we don't have a Bomber
-            if (this.getNumberOfBombers() == 0
+            if (this.getNumberOfSuicideBombers() == 0
                     // and we waited for 5 turns
                     && board.getMyTrapCooldown() == 0
                     // and we have more than 2 robots alive
                     && this.board.getMyTeam().getRobots().stream().filter(Entity::isAlive).count() > 2
                     // and the enemy has more than 2 robots alive
                     && this.board.getOpponentTeam().getRobots().stream().filter(Entity::isAlive).count() >= 2) {
-                this.behaviourMap.put(robot.getId(), new BomberBehaviour(robot, board));
+                this.behaviourMap.put(robot.getId(), new SuicideBomberBehaviour(robot, board));
                 continue;
             }
 

@@ -7,6 +7,7 @@ import com.player.model.Board;
 import com.player.model.Cell;
 import com.player.model.Coord;
 import com.player.model.Entity;
+import com.player.model.EntityType;
 
 public class MinerBehaviour extends EntityBehaviour {
 
@@ -17,7 +18,7 @@ public class MinerBehaviour extends EntityBehaviour {
 
   @Override public Action getNextAction() {
     // Miner has cristal on him, bring it to headquarters
-    if (entity.hasItem()) {
+    if (entity.getItem() == EntityType.AMADEUSIUM) {
       return returnAction(Action.move(this.getCloserHeadQuarterCell().getCoord()));
     }
 
@@ -62,8 +63,8 @@ public class MinerBehaviour extends EntityBehaviour {
           newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY();
           break;
         default:
-          newX = fixedCoord.getX() + 1 < board.getWidth() ? fixedCoord.getX() + 1 : fixedCoord.getX() - 1;
-          newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY() - 1;
+          newX = fixedCoord.getX() + 3 < board.getWidth() ? fixedCoord.getX() + 3 : fixedCoord.getX();
+          newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY();
       }
 
       fixedCoord = new Coord(newX, newY);

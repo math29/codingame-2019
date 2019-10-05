@@ -9,7 +9,7 @@ import com.player.model.EntityType;
 
 public class BomberBehaviour extends EntityBehaviour {
 
-  BomberBehaviour(final Entity robot, final Board board) {
+  public BomberBehaviour(final Entity robot, final Board board) {
     super(robot, board);
     this.NAME = "Bomber";
   }
@@ -20,7 +20,7 @@ public class BomberBehaviour extends EntityBehaviour {
       return returnAction(Action.request(EntityType.TRAP));
     }
 
-    Cell closestOreCell = this.getCloserJuicyOreCell();
+    Cell closestOreCell = getCloserJuicyOreCell();
 
     if (entity.getItem() == EntityType.TRAP
         && closestOreCell.getCoord().distance(entity.getPos()) <= 2
@@ -39,7 +39,7 @@ public class BomberBehaviour extends EntityBehaviour {
 
   private Cell getCloserJuicyOreCell() {
     Cell closerCell = null;
-    int minDistance = 50;
+    int minDistance = board.getWidth();
     for (final Cell cell : board.getCells()) {
       int distance = cell.getCoord().distance(this.entity.getPos());
       if (cell.getOre() > 1 && distance < minDistance && !cell.hasAllyTrap(board) && !cell.isHole()) {
@@ -48,7 +48,15 @@ public class BomberBehaviour extends EntityBehaviour {
       }
     }
     if (closerCell == null) {
-      return this.getClosestOreCell().orElseGet(() -> board.getCell(new Coord(0, 0)));
+      return this.getClosestOreCell().orElseGet(() -> {
+        for (int i = 5; i < board.getHeight() - 2; i++) {
+          if (!board.getCell(new Coord(1, i)).hasAllyTrap(board)) {
+            return board.getCell(new Coord(1, i));
+          }
+        }
+
+        return board.getCell(new Coord(0, 0));
+      });
     }
     return closerCell;
   }

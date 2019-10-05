@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ -f target/player.java ]
 then
     rm target/player.java

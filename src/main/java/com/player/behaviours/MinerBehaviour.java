@@ -12,25 +12,22 @@ public class MinerBehaviour extends EntityBehaviour {
 
   public MinerBehaviour(final Entity entity, final Board board) {
     super(entity, board);
-    this.NAME = "Miner";
+    this.NAME = "Miner" + entity.getId();
   }
 
   @Override public Action getNextAction() {
-    // Miner has cristal on him else go to mine
+    // Miner has cristal on him, bring it to headquarters
     if (entity.hasItem()) {
       return returnAction(Action.move(this.getCloserHeadQuarterCell().getCoord()));
     }
 
-    // Miner is looking for christal
-    Optional<Cell> closestOre;
-    Optional<Cell> closestSafe = getClosestSafeInterestingOre();
-    if (!closestSafe.isPresent()) {
+    // Find a good cell to mine
+    Optional<Cell> closestOre = getClosestSafeInterestingOre();
+    if (!closestOre.isPresent()) {
       closestOre = this.getClosestOreCell();
-    } else {
-      closestOre = closestSafe;
     }
 
-    // Found some!
+    // Found some! Dig if you are close or, otherwise, move
     if (closestOre.isPresent()) {
       if (closestOre.get().getCoord().distance(entity.getPos()) <= 2) {
         return returnAction(Action.dig(closestOre.get().getCoord()));
@@ -39,17 +36,45 @@ public class MinerBehaviour extends EntityBehaviour {
       }
     }
 
-    // No Christal found, go fo default mining
-    Coord nextFixedCoord = new Coord(entity.getPos().getX() + 1, entity.getPos().getY());
-    if (!this.board.getCell(nextFixedCoord).isHole()) {
-      return returnAction(Action.dig(nextFixedCoord));
+    if (entity.isAtHeadquarters()) {
+      return returnAction(Action.move(new Coord(entity.getPos().getX() + 3, entity.getPos().getY())));
     }
-    return returnAction(Action.move(nextFixedCoord));
+
+    // No christal found, go for default mining
+    int i = 0, newX = entity.getPos().getX(), newY = entity.getPos().getY();
+    Coord fixedCoord = new Coord(newX, newY);
+    while (board.getCell(fixedCoord).isHole() || board.getCell(fixedCoord).hasAllyTrap(board)) {
+      switch (i) {
+        case 0:
+          newX = fixedCoord.getX() - 1 > 0 ? fixedCoord.getX() - 1 : fixedCoord.getX();
+          newY = fixedCoord.getY() < board.getHeight() ? fixedCoord.getY() : fixedCoord.getY() - 1;
+          break;
+        case 1:
+          newX = fixedCoord.getX() + 1 < board.getWidth() ? fixedCoord.getX() + 1 : fixedCoord.getX();
+          newY = fixedCoord.getY() - 1 > 0 ? fixedCoord.getY() - 1 : fixedCoord.getY();
+          break;
+        case 2:
+          newX = fixedCoord.getX() + 1 < board.getWidth() ? fixedCoord.getX() + 1 : fixedCoord.getX();
+          newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY();
+          break;
+        case 3:
+          newX = fixedCoord.getX() - 1 < board.getWidth() ? fixedCoord.getX() - 1 : fixedCoord.getX();
+          newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY();
+          break;
+        default:
+          newX = fixedCoord.getX() + 1 < board.getWidth() ? fixedCoord.getX() + 1 : fixedCoord.getX() - 1;
+          newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY() - 1;
+      }
+
+      fixedCoord = new Coord(newX, newY);
+      i++;
+    }
+    return returnAction(Action.dig(fixedCoord));
   }
 
   private Optional<Cell> getClosestSafeInterestingOre() {
     Optional<Cell> closerCell = Optional.empty();
-    int minDistance = 50;
+    int minDistance = board.getWidth();
     for (final Cell cell : board.getCells()) {
       int distance = cell.getCoord().distance(this.entity.getPos());
       if (cell.hasOre()

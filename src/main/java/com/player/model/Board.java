@@ -21,8 +21,8 @@ public class Board implements Cloneable {
     private Cell[][] cells;
 
     private int myRadarCooldown;
-
     private int myTrapCooldown;
+
     private Map<Integer, Entity> entitiesById;
     private Collection<Coord> myRadarPos;
     private Collection<Coord> myTrapPos;

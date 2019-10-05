@@ -25,15 +25,18 @@ public abstract class BehaviourOrchestrator {
   public void initializeBehaviours(final Board board) {
     this.board = board;
     behaviourMap = new HashMap<>();
+
     for (final Entity robot : board.getMyTeam().getRobots()) {
-      if (robot.hasItem() && robot.getItem() == EntityType.RADAR && robot.isAlive()) {
-        this.behaviourMap.put(robot.getId(), new ScoutBehaviour(robot, board));
-      } else if (robot.hasItem() && robot.getItem() == EntityType.TRAP && robot.isAlive()) {
-        this.behaviourMap.put(robot.getId(), new SuicideBomberBehaviour(robot, board));
-      } else if (robot.hasItem() && robot.getItem() == EntityType.AMADEUSIUM && robot.isAlive()) {
-        this.behaviourMap.put(robot.getId(), new MinerBehaviour(robot, board));
+      if (robot.hasItem() && robot.isAlive()) {
+        if (robot.getItem() == EntityType.RADAR) {
+          behaviourMap.put(robot.getId(), new ScoutBehaviour(robot, board));
+        } else if (robot.getItem() == EntityType.TRAP) {
+          behaviourMap.put(robot.getId(), new SuicideBomberBehaviour(robot, board));
+        } else if (robot.getItem() == EntityType.AMADEUSIUM) {
+          behaviourMap.put(robot.getId(), new MinerBehaviour(robot, board));
+        }
       } else {
-        this.behaviourMap.put(robot.getId(), null);
+        behaviourMap.put(robot.getId(), null);
       }
     }
   }

@@ -12,7 +12,7 @@ public class MinerBehaviour extends EntityBehaviour {
 
   public MinerBehaviour(final Entity entity, final Board board) {
     super(entity, board);
-    this.NAME = "Miner";
+    this.NAME = "Miner" + entity.getId();
   }
 
   @Override public Action getNextAction() {
@@ -21,16 +21,13 @@ public class MinerBehaviour extends EntityBehaviour {
       return returnAction(Action.move(this.getCloserHeadQuarterCell().getCoord()));
     }
 
-    // Miner is looking for christal
-    Optional<Cell> closestOre;
-    Optional<Cell> closestSafe = getClosestSafeInterestingOre();
-    if (!closestSafe.isPresent()) {
+    // Find a good cell to mine
+    Optional<Cell> closestOre = getClosestSafeInterestingOre();
+    if (!closestOre.isPresent()) {
       closestOre = this.getClosestInterestingOre();
-    } else {
-      closestOre = closestSafe;
     }
 
-    // Found some!
+    // Found some! Dig if you are close or, otherwise, move
     if (closestOre.isPresent()) {
       if (closestOre.get().getCoord().distance(entity.getPos()) <= 2) {
         return returnAction(Action.dig(closestOre.get().getCoord()));
@@ -44,9 +41,9 @@ public class MinerBehaviour extends EntityBehaviour {
     }
 
     // No christal found, go for default mining
-    int i = 0, newX = 0, newY = 0;
-    Coord fixedCoord = new Coord(entity.getPos().getX(), entity.getPos().getY());
-    while (Action.IsDiggedByUs(board.getCell(fixedCoord).getCoord())) {
+    int i = 0, newX = entity.getPos().getX(), newY = entity.getPos().getY();
+    Coord fixedCoord = new Coord(newX, newY);
+    while (board.getCell(fixedCoord).isHole() || board.getCell(fixedCoord).hasAllyTrap(board)) {
       switch (i) {
         case 0:
           newX = fixedCoord.getX() - 1 > 0 ? fixedCoord.getX() - 1 : fixedCoord.getX();

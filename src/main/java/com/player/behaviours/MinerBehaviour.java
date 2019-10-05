@@ -40,15 +40,37 @@ public class MinerBehaviour extends EntityBehaviour {
     }
 
     if (entity.isAtHeadquarters()) {
-      return returnAction(Action.move(new Coord(entity.getPos().getX() + 8, entity.getPos().getY())));
+      return returnAction(Action.move(new Coord(entity.getPos().getX() + 3, entity.getPos().getY())));
     }
 
     // No christal found, go for default mining
+    int i = 0, newX = 0, newY = 0;
     Coord fixedCoord = new Coord(entity.getPos().getX(), entity.getPos().getY());
-    while (board.getCell(fixedCoord).isHole()) {
-      int newX = fixedCoord.getX() + 1 < board.getWidth() ? fixedCoord.getX() + 1 : fixedCoord.getX() - 1;
-      int newY = fixedCoord.getY() < board.getHeight() ? fixedCoord.getY() : fixedCoord.getY() - 1;
+    while (Action.IsDiggedByUs(board.getCell(fixedCoord).getCoord())) {
+      switch (i) {
+        case 0:
+          newX = fixedCoord.getX() - 1 > 0 ? fixedCoord.getX() - 1 : fixedCoord.getX();
+          newY = fixedCoord.getY() < board.getHeight() ? fixedCoord.getY() : fixedCoord.getY() - 1;
+          break;
+        case 1:
+          newX = fixedCoord.getX() + 1 < board.getWidth() ? fixedCoord.getX() + 1 : fixedCoord.getX();
+          newY = fixedCoord.getY() - 1 > 0 ? fixedCoord.getY() - 1 : fixedCoord.getY();
+          break;
+        case 2:
+          newX = fixedCoord.getX() + 1 < board.getWidth() ? fixedCoord.getX() + 1 : fixedCoord.getX();
+          newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY();
+          break;
+        case 3:
+          newX = fixedCoord.getX() - 1 < board.getWidth() ? fixedCoord.getX() - 1 : fixedCoord.getX();
+          newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY();
+          break;
+        default:
+          newX = fixedCoord.getX() + 1 < board.getWidth() ? fixedCoord.getX() + 1 : fixedCoord.getX() - 1;
+          newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY() - 1;
+      }
+
       fixedCoord = new Coord(newX, newY);
+      i++;
     }
     return returnAction(Action.dig(fixedCoord));
   }

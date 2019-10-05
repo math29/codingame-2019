@@ -21,6 +21,7 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
 
             if (!robot.isAlive()) {
                 this.behaviourMap.put(robot.getId(), new ZombieBehaviour(robot, board));
+                continue;
             }
 
             // If we don't have a Scout
@@ -39,12 +40,10 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
 
             // If we don't have a Bomber
             if (this.getNumberOfSuicideBombers() == 0
-                    // and we waited for 5 turns
-                    && board.getMyTrapCooldown() == 0
                     // and we have more than 2 robots alive
-                    && this.board.getMyTeam().getRobots().stream().filter(Entity::isAlive).count() > 2
+                    && this.board.getMyTeam().getRobots().stream().filter(Entity::isAlive).count() >= 2
                     // and the enemy has more than 2 robots alive
-                    && this.board.getOpponentTeam().getRobots().stream().filter(Entity::isAlive).count() >= 2) {
+                    && this.board.getOpponentTeam().getRobots().stream().filter(Entity::isAlive).count() > 2) {
                 this.behaviourMap.put(robot.getId(), new SuicideBomberBehaviour(robot, board));
                 continue;
             }

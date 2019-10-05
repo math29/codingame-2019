@@ -24,7 +24,7 @@ public class MinerBehaviour extends EntityBehaviour {
     // Find a good cell to mine
     Optional<Cell> closestOre = getClosestSafeInterestingOre();
     if (!closestOre.isPresent()) {
-      closestOre = this.getClosestInterestingOre();
+      closestOre = this.getClosestOreCell();
     }
 
     // Found some! Dig if you are close or, otherwise, move
@@ -80,22 +80,7 @@ public class MinerBehaviour extends EntityBehaviour {
       if (cell.hasOre()
               && distance < minDistance
               && !cell.hasAllyTrap(board)
-              && !cell.isHole()) {
-        closerCell = Optional.of(cell);
-        minDistance = distance;
-      }
-    }
-    return closerCell;
-  }
-
-  private Optional<Cell> getClosestInterestingOre() {
-    Optional<Cell> closerCell = Optional.empty();
-    int minDistance = board.getWidth();
-    for (final Cell cell : board.getCells()) {
-      int distance = cell.getCoord().distance(this.entity.getPos());
-      if (cell.hasOre()
-              && distance < minDistance
-              && !cell.hasAllyTrap(board)) {
+              && !cell.hasPotentialEnemyTrap()) {
         closerCell = Optional.of(cell);
         minDistance = distance;
       }

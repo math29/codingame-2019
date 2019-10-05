@@ -6,16 +6,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Board {
-    private final int width;
-    private final int height;
+public class Board implements Cloneable {
+    private int width;
+    private int height;
 
-    private final Team myTeam = new Team();
-    private final Team opponentTeam = new Team();
+    private Team myTeam = new Team();
+    private Team opponentTeam = new Team();
     private Cell[][] cells;
 
     private int myRadarCooldown;
@@ -57,6 +59,74 @@ public class Board {
             } else if (entity.getType() == EntityType.TRAP) {
                 myTrapPos.add(entity.getPos());
             }
+        }
+        this.updateFromHistory();
+        this.analyseEnemyBehaviour();
+    }
+
+    private void updateFromHistory() {
+        Optional<Board> previousTurn = History.getPreviousTurn();
+        if (previousTurn.isPresent()) {
+            previousTurn.get().getCells().stream()
+                .filter(Cell::hasPotentialEnemyTrap)
+                .forEach(cell -> this.getCell(cell.getCoord()).setPotentialEnemyTrap());
+            previousTurn.get().getOpponentTeam().getRobotsAlive().stream()
+                .filter(Entity::isTerroristSuspect)
+                .forEach(entity -> this.getOpponentTeam().getRobot(entity.getId()).get().tagAsTerroristSuspect());
+        }
+    }
+
+    private void analyseEnemyBehaviour() {
+        this.setTerroristTags();
+        this.setEnemyTrapCellTags();
+    }
+
+    private void setTerroristTags() {
+        this.getOpponentTeam().getRobotsAlive().forEach(entity -> {
+            Optional<Board> previousTurn = History.getPreviousTurn();
+            if (previousTurn.isPresent()) {
+                Optional<Entity> previousEntityState = previousTurn.get().getOpponentTeam().getRobot(entity.getId());
+                if (previousEntityState.isPresent()
+                    && previousEntityState.get().isAtHeadquarters()
+                    && entity.isAtHeadquarters()) {
+                    entity.tagAsTerroristSuspect();
+                }
+            }
+        });
+    }
+
+    private void setEnemyTrapCellTags() {
+        this.getOpponentTeam().getRobotsAlive().forEach(entity -> {
+            Optional<Board> previousTurn = History.getPreviousTurn();
+            if (previousTurn.isPresent()) {
+                Optional<Entity> previousEntityState = previousTurn.get().getOpponentTeam().getRobot(entity.getId());
+                if (previousEntityState.isPresent()
+                    && entity.isTerroristSuspect()
+                    && !entity.isAtHeadquarters()
+                    && entity.getPos().equals(previousEntityState.get().getPos())) {
+                    this.cellEnemyTrapNeighbourhoodAnalysis(this.getCell(entity.getPos()), previousTurn.get());
+                    entity.removeTagAsTerroristSuspect();
+                }
+            }
+        });
+    }
+
+    private void cellEnemyTrapNeighbourhoodAnalysis(final Cell cell, final Board previousTurn) {
+        Set<Cell> impactedCells = cell.getNeighbourCells(this);
+        impactedCells.add(cell);
+        Set<Cell> impactedHoles = impactedCells.stream().filter(Cell::isHole).collect(Collectors.toSet());
+        Set<Cell> previouslyHoles = impactedCells.stream()
+            .map(c -> previousTurn.getCell(c.getCoord()))
+            .filter(Cell::isHole)
+            .collect(Collectors.toSet());
+        if (impactedHoles.size() > previouslyHoles.size()) {
+            impactedCells.forEach(c -> {
+                if (!previouslyHoles.contains(c)) {
+                    c.setPotentialEnemyTrap();
+                }
+            });
+        } else {
+            impactedHoles.forEach(Cell::setPotentialEnemyTrap);
         }
     }
 
@@ -130,5 +200,26 @@ public class Board {
 
     public Collection<Coord> getMyTrapPos() {
         return myTrapPos;
+    }
+
+    public Board clone() throws CloneNotSupportedException {
+        Board clone = (Board) super.clone();
+        clone.myTeam = this.getMyTeam().clone();
+        clone.opponentTeam = this.getOpponentTeam().clone();
+        clone.cells = deepCloneCells(this.cells);
+        clone.entitiesById = new HashMap<>(this.getEntitiesById());
+        clone.myRadarPos = new ArrayList<>(this.getMyRadarPos());
+        clone.myTrapPos = new ArrayList<>(this.getMyTrapPos());
+        return clone;
+    }
+
+    private static Cell[][] deepCloneCells(Cell[][] input) {
+        if (input == null)
+            return null;
+        Cell[][] result = new Cell[input.length][];
+        for (int r = 0; r < input.length; r++) {
+            result[r] = input[r].clone();
+        }
+        return result;
     }
 }

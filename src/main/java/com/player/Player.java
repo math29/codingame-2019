@@ -1,6 +1,8 @@
 package com.player;
 
 import java.util.*;
+import java.util.stream.*;
+import java.util.concurrent.*;
 
 import com.player.behaviours.EntityBehaviour;
 import com.player.model.Board;
@@ -34,7 +36,11 @@ class Player {
       for (EntityBehaviour behaviour : behaviourOrchestrator.behaviourMap.values()) {
         System.out.println(behaviour.getNextAction());
       }
-      History.recordNewTurn(board);
+      try {
+        History.recordNewTurn(board.clone());
+      } catch (CloneNotSupportedException e) {
+        System.err.println("clone failed: " + e.getMessage());
+      }
     }
   }
 }

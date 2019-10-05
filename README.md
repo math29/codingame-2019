@@ -11,6 +11,3 @@ Once your test are passing, run `./.tools/build.sh` script to get your unique ja
 ## Development guidelines
 
 The script which concatenate is introspecting packages under `com.player.*`
-
-## Game rules
-Open with your browser `./statement/CodinGame Results/Coding Games and Programming Challenges to Code Better.htm`

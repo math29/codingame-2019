@@ -1,9 +1,9 @@
 package com.player.model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -96,5 +96,19 @@ public class Cell {
             }
         });
         return neighbourhood;
+    }
+
+    public static boolean isCloseToAllyBombs(Board board, int x, int y) {
+        return isCloseToCoord(board.getMyTrapPos(), x, y);
+    }
+
+    public static boolean isCloseToCoord(Collection<Coord> coords, int x, int y) {
+        return coords.stream().anyMatch(coord -> (
+                (coord.getX() == x && coord.getY() == y)
+                        || (coord.getX() == x && (coord.getY() == y - 1
+                        || coord.getY() == y + 1))
+                        || (coord.getY() == y && (coord.getX() == x - 1
+                        || coord.getX() == x + 1))
+        ));
     }
 }

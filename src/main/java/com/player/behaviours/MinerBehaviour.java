@@ -20,7 +20,7 @@ public class MinerBehaviour extends EntityBehaviour {
   @Override public Action getNextAction() {
     // Miner has cristal on him, bring it to headquarters
     if (entity.getItem() == EntityType.AMADEUSIUM) {
-      return returnAction(Action.move(this.getCloserHeadQuarterCell().getCoord()));
+      return returnAction(Action.move(this.getCloserHeadQuarterSafeCell().getCoord()));
     }
 
     // Find a good cell to mine

@@ -1,7 +1,13 @@
 package com.player.behaviours;
 
-import com.player.model.*;
+import com.player.model.Action;
+import com.player.model.Board;
+import com.player.model.Cell;
+import com.player.model.Coord;
+import com.player.model.Entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -36,6 +42,73 @@ public abstract class EntityBehaviour {
         return closerCell;
     }
 
+    Cell getCloserHeadQuarterSafeCell() {
+        Cell closerCell = null;
+        int minDistance = board.getWidth();
+
+        // Calculate potential traps
+        List<Coord> potentialTraps = new ArrayList<>();
+        for (int i = 0; i < board.getHeight(); i++) {
+            Coord coord = new Coord(1, i);
+            if (board.getCell(coord).hasPotentialEnemyTrap()) {
+                potentialTraps.add(coord);
+            }
+        }
+
+        // Enemy is dangerous if he is close to ally or enemy trap
+        boolean isDangerousEnemyNearHeadQuarters = board.getOpponentTeam().getRobots().stream()
+                .anyMatch(e -> {
+                    int x = e.getPos().getX(), y = e.getPos().getY();
+
+                    return Cell.isCloseToAllyBombs(board, x, y)
+                            || Cell.isCloseToCoord(potentialTraps, x, y);
+                });
+
+        for (final Cell cell : board.getHeadQuarterCells()) {
+
+            // If there is an enemy at headquarters, try to not be blown by a Trap with (potentially) other allies
+            if (isDangerousEnemyNearHeadQuarters) {
+                int x = cell.getCoord().getX(), y = cell.getCoord().getY();
+
+                // Try to avoid cells in the impact area of ally or enemy traps
+                if (Cell.isCloseToAllyBombs(board, x, y)
+                        || Cell.isCloseToAllyBombs(board, x + 1, y)
+                        || Cell.isCloseToAllyBombs(board, x - 1, y)
+                        || board.getCell(cell.getCoord()).hasPotentialEnemyTrap()) {
+                    //System.err.println(String.format("Oups! Ally trap: [%s,%s]", x, y));
+                    continue;
+                }
+
+                // Do not go on the cell where you already have ally
+                boolean isAllyAtHeadQuarters = board.getMyTeam().getRobots().stream()
+                        .filter(Entity::isAtHeadquarters)
+                        .anyMatch(e -> e.getPos().equals(new Coord(x, y))
+                                || e.getPos().equals(new Coord(x, y + 1))
+                                || e.getPos().equals(new Coord(x, y - 1)));
+                if (isAllyAtHeadQuarters) {
+                    //System.err.println(String.format("Hello buddy! [%s,%s]", x, y));
+                    continue;
+                }
+            }
+
+            int distance = cell.getCoord().distance(this.entity.getPos());
+            if (distance < minDistance) {
+                closerCell = cell;
+                minDistance = distance;
+            }
+        }
+
+        // Fall bac in default behaviour
+        if (closerCell == null) {
+            System.err.println("No safe close cell was found!");
+            closerCell = getCloserHeadQuarterCell();
+        } else {
+            System.err.println("getCloserHeadQuarterSafeCell: " + closerCell.getCoord().toString());
+        }
+
+        return closerCell;
+    }
+
     Cell getCloserHeadQuarterCell() {
         Cell closerCell = board.getCell(new Coord(0, 0));
         int minDistance = board.getWidth();
@@ -46,6 +119,9 @@ public abstract class EntityBehaviour {
                 minDistance = distance;
             }
         }
+
+        System.err.println("getCloserHeadQuarterCell: " + closerCell.getCoord().toString());
+
         return closerCell;
     }
 

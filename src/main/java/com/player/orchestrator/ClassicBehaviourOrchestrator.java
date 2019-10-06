@@ -1,11 +1,11 @@
 package com.player.orchestrator;
 
-import com.player.behaviours.BomberBehaviour;
-import com.player.behaviours.ZombieBehaviour;
 import com.player.behaviours.MinerBehaviour;
 import com.player.behaviours.ScoutBehaviour;
 import com.player.behaviours.SuicideBomberBehaviour;
+import com.player.behaviours.ZombieBehaviour;
 import com.player.model.Entity;
+import com.player.model.History;
 
 import java.util.Optional;
 
@@ -61,7 +61,7 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
             if (robot.isPresent()) {
                 int distance = robot.get().getDistanceFromClosestHeadQuarterCell(board);
                 // If it's the 1st RADAR, it should be the closest to the coord of 1st RADAR
-                if (board.getMyRadarPos().isEmpty()) {
+                if (History.getNumberOfTurns() == 0) {
                     distance = robot.get().getPos().distance(ScoutBehaviour.scoutCoord.get(0));
                 }
 

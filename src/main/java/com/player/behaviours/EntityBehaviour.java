@@ -54,6 +54,9 @@ public abstract class EntityBehaviour {
                 potentialTraps.add(coord);
             }
         }
+        /*if (!potentialTraps.isEmpty()) {
+            System.err.println("Potential traps: " + potentialTraps.toString());
+        }*/
 
         // Enemy is dangerous if he is close to ally or enemy trap
         boolean isDangerousEnemyNearHeadQuarters = board.getOpponentTeam().getRobots().stream()
@@ -70,11 +73,14 @@ public abstract class EntityBehaviour {
             if (isDangerousEnemyNearHeadQuarters) {
                 int x = cell.getCoord().getX(), y = cell.getCoord().getY();
 
+                /*System.err.println(String.format("Close to enemy trap? [%s,%s] %s",
+                        x, y, Cell.isCloseToCoord(potentialTraps, x, y)));*/
+
                 // Try to avoid cells in the impact area of ally or enemy traps
                 if (Cell.isCloseToAllyBombs(board, x, y)
                         || Cell.isCloseToAllyBombs(board, x + 1, y)
                         || Cell.isCloseToAllyBombs(board, x - 1, y)
-                        || board.getCell(cell.getCoord()).hasPotentialEnemyTrap()) {
+                        || Cell.isCloseToCoord(potentialTraps, x, y)) {
                     //System.err.println(String.format("Oups! Ally trap: [%s,%s]", x, y));
                     continue;
                 }

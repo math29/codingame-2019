@@ -1,6 +1,7 @@
 package com.player.behaviours;
 
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.player.model.Action;
 import com.player.model.Board;
@@ -44,7 +45,9 @@ public class MinerBehaviour extends EntityBehaviour {
     // No christal found, go for default mining
     int i = 0, newX = entity.getPos().getX(), newY = entity.getPos().getY();
     Coord fixedCoord = new Coord(newX, newY);
+    int counter = 0;
     while (board.getCell(fixedCoord).isHole() || board.getCell(fixedCoord).hasAllyTrap(board)) {
+      int tmpX = newX, tmpY = newY;
       switch (i) {
         case 0:
           newX = fixedCoord.getX() - 1 > 0 ? fixedCoord.getX() - 1 : fixedCoord.getX();
@@ -65,6 +68,18 @@ public class MinerBehaviour extends EntityBehaviour {
         default:
           newX = fixedCoord.getX() + 3 < board.getWidth() ? fixedCoord.getX() + 3 : fixedCoord.getX();
           newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY();
+
+        // Try to make sure we are not stuck
+        if (tmpX == newX && tmpY == newY) {
+          counter++;
+        } else {
+          counter = 0;
+        }
+        // We are stuck, take a random coordinate
+        if (counter == 5) {
+          newX = ThreadLocalRandom.current().nextInt(5, board.getWidth() - 3);
+          newY = ThreadLocalRandom.current().nextInt(4, board.getHeight() - 3);
+        }
       }
 
       fixedCoord = new Coord(newX, newY);

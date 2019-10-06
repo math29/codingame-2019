@@ -60,6 +60,11 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
             Optional<Entity> robot = this.board.getMyTeam().getRobot(availableRobotIndex);
             if (robot.isPresent()) {
                 int distance = robot.get().getDistanceFromClosestHeadQuarterCell(board);
+                // If it's the 1st RADAR, it should be the closest to the coord of 1st RADAR
+                if (board.getMyRadarPos().isEmpty()) {
+                    distance = robot.get().getPos().distance(ScoutBehaviour.scoutCoord.get(0));
+                }
+
                 if (distance < minDistance) {
                     closestRobotIndex = Optional.of(robot.get().getId());
                     minDistance = distance;

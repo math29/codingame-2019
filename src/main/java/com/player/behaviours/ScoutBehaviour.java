@@ -12,7 +12,7 @@ import com.player.model.EntityType;
 
 public class ScoutBehaviour extends EntityBehaviour {
 
-    private static final List<Coord> scoutCoord = Collections.unmodifiableList(
+    public static final List<Coord> scoutCoord = Collections.unmodifiableList(
             new ArrayList<Coord>() {{
                 // phase # 1
                 add(new Coord(5, 5));

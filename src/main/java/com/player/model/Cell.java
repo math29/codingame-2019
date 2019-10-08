@@ -1,8 +1,6 @@
 package com.player.model;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -96,6 +94,14 @@ public class Cell {
             }
         });
         return neighbourhood;
+    }
+
+    // Impacted cells include neighbors and itself
+    public Set<Cell> getImpactedCells(final Board board) {
+        Set<Cell> impactedCells = getNeighbourCells(board);
+        impactedCells.add(this);
+
+        return impactedCells;
     }
 
     public static boolean isCloseToAllyBombs(Board board, int x, int y) {

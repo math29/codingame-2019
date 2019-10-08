@@ -87,11 +87,11 @@ public class Board implements Cloneable {
         this.setEnemyTrapCellTags();
         this.removeTerroristTags();
 
-        /*List<Coord> potTraps = this.getCells().stream()
+        List<Coord> potTraps = this.getCells().stream()
                 .filter(c -> c.hasPotentialEnemyTrap())
                 .map(c -> c.getCoord())
                 .collect(Collectors.toList());
-        System.err.println("PotTraps:" + potTraps.toString());*/
+        System.err.println("PotTraps:" + potTraps.toString());
 
         /*List<String> terroristsAfter = this.getOpponentTeam().getRobotsAlive().stream()
                 .filter(Entity::isTerroristSuspect)
@@ -125,7 +125,7 @@ public class Board implements Cloneable {
                     && entity.isTerroristSuspect()
                     && !entity.isAtHeadquarters()
                     && entity.getPos().equals(previousEntityState.get().getPos())) {
-                    this.cellEnemyTrapNeighbourhoodAnalysis(this.getCell(entity.getPos()));
+                    this.cellEnemyTrapNeighbourhoodAnalysis(this.getCell(entity.getPos()), previousTurn.get());
                 }
             }
         });
@@ -146,18 +146,31 @@ public class Board implements Cloneable {
         });
     }
 
-    private void cellEnemyTrapNeighbourhoodAnalysis(final Cell cell) {
+    private void cellEnemyTrapNeighbourhoodAnalysis(final Cell cell, final Board previousTurn) {
         Set<Cell> impactedCells = cell.getImpactedCells(this);
         Set<Cell> impactedHoles = impactedCells.stream()
                 .filter(Cell::isHole)
                 .collect(Collectors.toSet());
-        impactedHoles.forEach(Cell::setPotentialEnemyTrap);
+        Set<Cell> previouslyHoles = impactedCells.stream()
+                .map(c -> previousTurn.getCell(c.getCoord()))
+                .filter(Cell::isHole)
+                .collect(Collectors.toSet());
 
-        List<Coord> impH = impactedHoles.stream()
+        if (impactedHoles.size() > previouslyHoles.size()) {
+            impactedCells.forEach(c -> {
+                if (!previouslyHoles.contains(c)) {
+                    c.setPotentialEnemyTrap();
+                }
+            });
+        } else {
+            impactedHoles.forEach(Cell::setPotentialEnemyTrap);
+        }
+
+        /*List<Coord> impH = impactedHoles.stream()
                 .filter(c -> c.hasPotentialEnemyTrap())
                 .map(c -> c.getCoord())
                 .collect(Collectors.toList());
-        System.err.println("impH:" + impH.toString());
+        System.err.println("impH:" + impH.toString());*/
     }
 
     boolean cellExist(Coord pos) {

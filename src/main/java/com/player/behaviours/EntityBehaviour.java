@@ -28,13 +28,15 @@ public abstract class EntityBehaviour {
         return action.withMessage(this.NAME);
     }
 
-    // Returns closest Ore Cell, null if none
+    // Returns closest Ore Cell, Optional.empty() if none
     Optional<Cell> getClosestOreCell() {
         Optional<Cell> closerCell = Optional.empty();
         int minDistance = board.getWidth();
         for (final Cell cell : board.getCells()) {
             int distance = cell.getCoord().distance(this.entity.getPos());
-            if (cell.hasOre() && distance < minDistance && !cell.hasAllyTrap(board)) {
+            if (cell.hasOre()
+                    && distance < minDistance
+                    && !cell.hasAllyTrap(board)) {
                 closerCell = Optional.of(cell);
                 minDistance = distance;
             }

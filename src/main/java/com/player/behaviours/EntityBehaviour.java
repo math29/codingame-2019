@@ -106,11 +106,11 @@ public abstract class EntityBehaviour {
 
         // Fall bac in default behaviour
         if (closerCell == null) {
-            System.err.println("No safe close cell was found!");
+            //System.err.println("No safe close cell was found!");
             closerCell = getCloserHeadQuarterCell();
-        } else {
+        } /*else {
             System.err.println("getCloserHeadQuarterSafeCell: " + closerCell.getCoord().toString());
-        }
+        }*/
 
         return closerCell;
     }
@@ -126,7 +126,7 @@ public abstract class EntityBehaviour {
             }
         }
 
-        System.err.println("getCloserHeadQuarterCell: " + closerCell.getCoord().toString());
+        //System.err.println("getCloserHeadQuarterCell: " + closerCell.getCoord().toString());
 
         return closerCell;
     }

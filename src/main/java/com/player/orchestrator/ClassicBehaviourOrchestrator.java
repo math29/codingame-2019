@@ -26,13 +26,13 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
 
             // If we don't have a Scout
             if (this.getNumberOfScouts() == 0
-                    // and we waited for 5 turns
-                    && board.getMyRadarCooldown() == 0
                     // and we don't have much gold left
                     && board.getCells().stream()
-                        .filter(cell -> cell.hasOre() && !cell.isHole() && !cell.hasAllyTrap(board))
-                        .count() < board.getMyTeam().getNumberOfRobotAlive()
-                    // ...?
+                        .filter(cell -> cell.hasOre()
+                                && !cell.hasPotentialEnemyTrap()
+                                && !cell.hasAllyTrap(board))
+                        .count() < board.getMyTeam().getNumberOfRobotAlive() * 2
+                    // and we have a best match for our scout
                     && robot.getId() == getBestMatchNextScoutRobotId().orElse(robot.getId())) {
                 this.behaviourMap.put(robot.getId(), new ScoutBehaviour(robot, board));
                 continue;

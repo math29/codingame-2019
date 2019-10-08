@@ -87,11 +87,11 @@ public class Board implements Cloneable {
         this.setEnemyTrapCellTags();
         this.removeTerroristTags();
 
-        List<Coord> potTraps = this.getCells().stream()
+        /*List<Coord> potTraps = this.getCells().stream()
                 .filter(c -> c.hasPotentialEnemyTrap())
                 .map(c -> c.getCoord())
                 .collect(Collectors.toList());
-        System.err.println("PotTraps:" + potTraps.toString());
+        System.err.println("PotTraps:" + potTraps.toString());*/
 
         /*List<String> terroristsAfter = this.getOpponentTeam().getRobotsAlive().stream()
                 .filter(Entity::isTerroristSuspect)

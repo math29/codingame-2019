@@ -42,11 +42,16 @@ public class BomberBehaviour extends EntityBehaviour {
     int minDistance = board.getWidth();
     for (final Cell cell : board.getCells()) {
       int distance = cell.getCoord().distance(this.entity.getPos());
-      if (cell.getOre() > 1 && distance < minDistance && !cell.hasAllyTrap(board) && !cell.isHole()) {
+      if (cell.getOre() > 1
+              && distance < minDistance
+              && cell.isRadarFree(board)
+              && !cell.hasAllyTrap(board)
+              && !cell.hasPotentialEnemyTrap()) {
         closerCell = cell;
         minDistance = distance;
       }
     }
+
     if (closerCell == null) {
       return this.getClosestOreCell().orElseGet(() -> {
         for (int i = 5; i < board.getHeight() - 2; i++) {

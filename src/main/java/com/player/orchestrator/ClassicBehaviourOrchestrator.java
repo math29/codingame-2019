@@ -1,5 +1,6 @@
 package com.player.orchestrator;
 
+import com.player.behaviours.BomberBehaviour;
 import com.player.behaviours.MinerBehaviour;
 import com.player.behaviours.ScoutBehaviour;
 import com.player.behaviours.SuicideBomberBehaviour;

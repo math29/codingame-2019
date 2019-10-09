@@ -157,7 +157,7 @@ public class Board implements Cloneable {
                 .collect(Collectors.toSet());
 
         if (impactedHoles.size() > previouslyHoles.size()) {
-            impactedCells.forEach(c -> {
+            impactedHoles.forEach(c -> {
                 if (!previouslyHoles.contains(c)) {
                     c.setPotentialEnemyTrap();
                 }
@@ -165,12 +165,6 @@ public class Board implements Cloneable {
         } else {
             impactedHoles.forEach(Cell::setPotentialEnemyTrap);
         }
-
-        /*List<Coord> impH = impactedHoles.stream()
-                .filter(c -> c.hasPotentialEnemyTrap())
-                .map(c -> c.getCoord())
-                .collect(Collectors.toList());
-        System.err.println("impH:" + impH.toString());*/
     }
 
     boolean cellExist(Coord pos) {

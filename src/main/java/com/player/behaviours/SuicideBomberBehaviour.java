@@ -14,7 +14,7 @@ public class SuicideBomberBehaviour extends EntityBehaviour {
 
   public SuicideBomberBehaviour(final Entity robot, final Board board) {
     super(robot, board);
-    this.NAME = "Friendly Bomber";
+    this.NAME = "Friendly Bomber" + entity.getId();
   }
 
   @Override public Action getNextAction() {
@@ -31,7 +31,7 @@ public class SuicideBomberBehaviour extends EntityBehaviour {
 
     // Bomber should put a TRAP
     if (entity.getItem() == EntityType.TRAP) {
-      for (int i = 5; i < board.getHeight() - 2; i++) {
+      for (int i = 3; i < board.getHeight() - 3; i++) {
         if (!board.getCell(new Coord(1, i)).hasAllyTrap(board)) {
           return returnAction(Action.dig(new Coord(1, i)));
         }
@@ -46,7 +46,7 @@ public class SuicideBomberBehaviour extends EntityBehaviour {
     List<Entity> enemyCloseToBombs = new ArrayList<>();
 
     board.getOpponentTeam().getRobots().forEach(enemyRobot -> {
-      if (isCloseToBombs(enemyRobot)) {
+      if (Cell.isCloseToAllyBombs(board, enemyRobot.getPos().getX(), enemyRobot.getPos().getY())) {
         enemyCloseToBombs.add(enemyRobot);
       }
     });
@@ -58,22 +58,12 @@ public class SuicideBomberBehaviour extends EntityBehaviour {
     List<Entity> alliesInRange = new ArrayList<>();
 
     board.getMyTeam().getRobots().forEach(robot -> {
-      if (isCloseToBombs(robot)) {
+      if (Cell.isCloseToAllyBombs(board, robot.getPos().getX(), robot.getPos().getY())) {
         alliesInRange.add(robot);
       }
     });
 
     return alliesInRange;
-  }
-
-  private boolean isCloseToBombs(final Entity robot) {
-    return board.getMyTrapPos().stream().anyMatch(trapPosition -> (
-        (trapPosition.getX() == robot.getPos().getX() && trapPosition.getY() == robot.getPos().getY())
-            || (trapPosition.getX() == robot.getPos().getX() && (trapPosition.getY() == robot.getPos().getY() - 1
-                || trapPosition.getY() == robot.getPos().getY() + 1))
-            || (trapPosition.getY() == robot.getPos().getY() && (trapPosition.getX() == robot.getPos().getX() - 1
-                || trapPosition.getX() == robot.getPos().getX() + 1))
-    ));
   }
 
   private Cell getClosestExplodingCell() {

@@ -30,7 +30,8 @@ public abstract class BehaviourOrchestrator {
       if (robot.hasItem() && robot.isAlive()) {
         if (robot.getItem() == EntityType.RADAR) {
           behaviourMap.put(robot.getId(), new ScoutBehaviour(robot, board));
-        } else if (robot.getItem() == EntityType.TRAP) {
+        } else if (robot.getItem() == EntityType.TRAP
+                && board.getMyTeam().getRobots().stream().filter(Entity::isAlive).count() >= 2) {
           behaviourMap.put(robot.getId(), new SuicideBomberBehaviour(robot, board));
         } else if (robot.getItem() == EntityType.AMADEUSIUM) {
           behaviourMap.put(robot.getId(), new MinerBehaviour(robot, board));

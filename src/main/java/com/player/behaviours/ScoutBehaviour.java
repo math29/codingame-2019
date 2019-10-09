@@ -12,7 +12,7 @@ import com.player.model.EntityType;
 
 public class ScoutBehaviour extends EntityBehaviour {
 
-    private static final List<Coord> scoutCoord = Collections.unmodifiableList(
+    public static final List<Coord> scoutCoord = Collections.unmodifiableList(
             new ArrayList<Coord>() {{
                 // phase # 1
                 add(new Coord(5, 5));
@@ -40,7 +40,7 @@ public class ScoutBehaviour extends EntityBehaviour {
 
   public ScoutBehaviour(final Entity entity, final Board board) {
         super(entity, board);
-        this.NAME = "Scout";
+        this.NAME = "Scout" + entity.getId();
     }
 
   @Override public Action getNextAction() {
@@ -64,7 +64,7 @@ public class ScoutBehaviour extends EntityBehaviour {
         }
 
         // Return to headquarters for the new RADAR
-        return returnAction(Action.move(getCloserHeadQuarterCell().getCoord()));
+        return returnAction(Action.move(getCloserHeadQuarterSafeCell().getCoord()));
     }
 
     private Coord getScoutCoord() {

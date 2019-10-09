@@ -1,11 +1,12 @@
 package com.player.orchestrator;
 
 import com.player.behaviours.BomberBehaviour;
-import com.player.behaviours.ZombieBehaviour;
 import com.player.behaviours.MinerBehaviour;
 import com.player.behaviours.ScoutBehaviour;
 import com.player.behaviours.SuicideBomberBehaviour;
+import com.player.behaviours.ZombieBehaviour;
 import com.player.model.Entity;
+import com.player.model.History;
 
 import java.util.Optional;
 
@@ -26,13 +27,13 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
 
             // If we don't have a Scout
             if (this.getNumberOfScouts() == 0
-                    // and we waited for 5 turns
-                    && board.getMyRadarCooldown() == 0
                     // and we don't have much gold left
                     && board.getCells().stream()
-                        .filter(cell -> cell.hasOre() && !cell.isHole() && !cell.hasAllyTrap(board))
-                        .count() < board.getMyTeam().getNumberOfRobotAlive()
-                    // ...?
+                        .filter(cell -> cell.hasOre()
+                                && !cell.hasPotentialEnemyTrap()
+                                && !cell.hasAllyTrap(board))
+                        .count() < board.getMyTeam().getNumberOfRobotAlive() * 2
+                    // and we have a best match for our scout
                     && robot.getId() == getBestMatchNextScoutRobotId().orElse(robot.getId())) {
                 this.behaviourMap.put(robot.getId(), new ScoutBehaviour(robot, board));
                 continue;
@@ -60,6 +61,11 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
             Optional<Entity> robot = this.board.getMyTeam().getRobot(availableRobotIndex);
             if (robot.isPresent()) {
                 int distance = robot.get().getDistanceFromClosestHeadQuarterCell(board);
+                // If it's the 1st RADAR, it should be the closest to the coord of 1st RADAR
+                if (History.getNumberOfTurns() == 0) {
+                    distance = robot.get().getPos().distance(ScoutBehaviour.scoutCoord.get(0));
+                }
+
                 if (distance < minDistance) {
                     closestRobotIndex = Optional.of(robot.get().getId());
                     minDistance = distance;

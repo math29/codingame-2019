@@ -1,12 +1,14 @@
 package com.player.behaviours;
 
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.player.model.Action;
 import com.player.model.Board;
 import com.player.model.Cell;
 import com.player.model.Coord;
 import com.player.model.Entity;
+import com.player.model.EntityType;
 
 public class MinerBehaviour extends EntityBehaviour {
 
@@ -17,8 +19,8 @@ public class MinerBehaviour extends EntityBehaviour {
 
   @Override public Action getNextAction() {
     // Miner has cristal on him, bring it to headquarters
-    if (entity.hasItem()) {
-      return returnAction(Action.move(this.getCloserHeadQuarterCell().getCoord()));
+    if (entity.getItem() == EntityType.AMADEUSIUM) {
+      return returnAction(Action.move(this.getCloserHeadQuarterSafeCell().getCoord()));
     }
 
     // Find a good cell to mine
@@ -43,7 +45,9 @@ public class MinerBehaviour extends EntityBehaviour {
     // No christal found, go for default mining
     int i = 0, newX = entity.getPos().getX(), newY = entity.getPos().getY();
     Coord fixedCoord = new Coord(newX, newY);
+    int counter = 0;
     while (board.getCell(fixedCoord).isHole() || board.getCell(fixedCoord).hasAllyTrap(board)) {
+      int tmpX = newX, tmpY = newY;
       switch (i) {
         case 0:
           newX = fixedCoord.getX() - 1 > 0 ? fixedCoord.getX() - 1 : fixedCoord.getX();
@@ -62,8 +66,20 @@ public class MinerBehaviour extends EntityBehaviour {
           newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY();
           break;
         default:
-          newX = fixedCoord.getX() + 1 < board.getWidth() ? fixedCoord.getX() + 1 : fixedCoord.getX() - 1;
-          newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY() - 1;
+          newX = fixedCoord.getX() + 3 < board.getWidth() ? fixedCoord.getX() + 3 : fixedCoord.getX();
+          newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY();
+
+        // Try to make sure we are not stuck
+        if (tmpX == newX && tmpY == newY) {
+          counter++;
+        } else {
+          counter = 0;
+        }
+        // We are stuck, take a random coordinate
+        if (counter == 5) {
+          newX = ThreadLocalRandom.current().nextInt(5, board.getWidth() - 3);
+          newY = ThreadLocalRandom.current().nextInt(4, board.getHeight() - 3);
+        }
       }
 
       fixedCoord = new Coord(newX, newY);

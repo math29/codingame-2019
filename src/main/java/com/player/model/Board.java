@@ -177,6 +177,26 @@ public class Board implements Cloneable {
         return (pos.getX() >= 0) && (pos.getY() >= 0) && (pos.getX() < width) && (pos.getY() < height);
     }
 
+    public boolean isDangerousEnemyInRange(Cell cell) {
+        Set<Coord> allCloseToCellTraps = cell.getAllCloseToCellTraps(this);
+        if (allCloseToCellTraps.isEmpty()) {
+            return false;
+        }
+
+        for (Coord trapCoord : allCloseToCellTraps) {
+            Set<Cell> impactedCells = this.getCell(trapCoord).getImpactedCells(this);
+            long enemyCount = this.getOpponentTeam().getRobotsAlive().stream()
+                    .filter(r -> impactedCells.contains(this.getCell(r.getPos())))
+                    .count();
+
+            if (enemyCount > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public Cell getCell(Coord pos) {
         return cells[pos.getY()][pos.getX()];
     }
@@ -247,6 +267,12 @@ public class Board implements Cloneable {
 
     public Set<Coord> getPotentialEnemyTrapPos() {
         return potentialEnemyTrapPos;
+    }
+
+    public Set<Coord> getAllTrapPos() {
+        Set<Coord> allTraps = new HashSet<>(getMyTrapPos());
+        allTraps.addAll(getPotentialEnemyTrapPos());
+        return allTraps;
     }
 
     public Board clone() throws CloneNotSupportedException {

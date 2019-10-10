@@ -5,6 +5,7 @@ import com.player.behaviours.MinerBehaviour;
 import com.player.behaviours.ScoutBehaviour;
 import com.player.behaviours.SuicideBomberBehaviour;
 import com.player.behaviours.ZombieBehaviour;
+import com.player.model.Cell;
 import com.player.model.Entity;
 import com.player.model.History;
 
@@ -25,14 +26,17 @@ public class ClassicBehaviourOrchestrator extends BehaviourOrchestrator {
                 continue;
             }
 
+            int amountOfOre = board.getCells().stream()
+                    .filter(cell -> !cell.hasPotentialEnemyTrap()
+                            && !cell.hasAllyTrap(board))
+                    .mapToInt(Cell::getOre)
+                    .sum();
+            double robotsAlive = board.getMyTeam().getNumberOfRobotAlive()*1.5;
+
             // If we don't have a Scout
             if (this.getNumberOfScouts() == 0
                     // and we don't have much gold left
-                    && board.getCells().stream()
-                        .filter(cell -> cell.hasOre()
-                                && !cell.hasPotentialEnemyTrap()
-                                && !cell.hasAllyTrap(board))
-                        .count() < board.getMyTeam().getNumberOfRobotAlive() * 2
+                    && amountOfOre < robotsAlive
                     // and we have a best match for our scout
                     && robot.getId() == getBestMatchNextScoutRobotId().orElse(robot.getId())) {
                 this.behaviourMap.put(robot.getId(), new ScoutBehaviour(robot, board));

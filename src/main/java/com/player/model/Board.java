@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,7 +26,8 @@ public class Board implements Cloneable {
 
     private Map<Integer, Entity> entitiesById;
     private Collection<Coord> myRadarPos;
-    private Collection<Coord> myTrapPos;
+    private Set<Coord> myTrapPos;
+    private static Set<Coord> potentialEnemyTrapPos = new HashSet<>();
 
     public Board(Scanner in) {
         width = in.nextInt();
@@ -46,7 +48,7 @@ public class Board implements Cloneable {
         myTrapCooldown = in.nextInt();
         entitiesById = new HashMap<>();
         myRadarPos = new ArrayList<>();
-        myTrapPos = new ArrayList<>();
+        myTrapPos = new HashSet<>();
         for (int i = 0; i < entityCount; i++) {
             Entity entity = new Entity(in);
             entitiesById.put(entity.getId(), entity);
@@ -160,10 +162,14 @@ public class Board implements Cloneable {
             impactedHoles.forEach(c -> {
                 if (!previouslyHoles.contains(c)) {
                     c.setPotentialEnemyTrap();
+                    potentialEnemyTrapPos.add(c.getCoord());
                 }
             });
         } else {
-            impactedHoles.forEach(Cell::setPotentialEnemyTrap);
+            impactedHoles.forEach(c -> {
+                c.setPotentialEnemyTrap();
+                potentialEnemyTrapPos.add(c.getCoord());
+            });
         }
     }
 
@@ -235,8 +241,12 @@ public class Board implements Cloneable {
         return myRadarPos;
     }
 
-    public Collection<Coord> getMyTrapPos() {
+    public Set<Coord> getMyTrapPos() {
         return myTrapPos;
+    }
+
+    public Set<Coord> getPotentialEnemyTrapPos() {
+        return potentialEnemyTrapPos;
     }
 
     public Board clone() throws CloneNotSupportedException {
@@ -246,7 +256,7 @@ public class Board implements Cloneable {
         clone.cells = deepCloneCells(this.cells);
         clone.entitiesById = new HashMap<>(this.getEntitiesById());
         clone.myRadarPos = new ArrayList<>(this.getMyRadarPos());
-        clone.myTrapPos = new ArrayList<>(this.getMyTrapPos());
+        clone.myTrapPos = new HashSet<>(this.getMyTrapPos());
         return clone;
     }
 

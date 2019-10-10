@@ -9,7 +9,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 class CellTest {
 
@@ -103,7 +105,7 @@ class CellTest {
 
     @Test
     void shouldNotHaveAllyTrap() {
-        Collection<Coord> myTrapPoos = new ArrayList<>();
+        Set<Coord> myTrapPoos = new HashSet<>();
         myTrapPoos.add(new Coord(0, 1));
         myTrapPoos.add(new Coord(0, 0));
         myTrapPoos.add(new Coord(1, 1));
@@ -117,7 +119,7 @@ class CellTest {
 
     @Test
     void shouldHaveAllyTrap() {
-        Collection<Coord> myTrapPoos = new ArrayList<>();
+        Set<Coord> myTrapPoos = new HashSet<>();
         myTrapPoos.add(new Coord(0, 1));
         myTrapPoos.add(new Coord(0, 0));
         myTrapPoos.add(new Coord(1, 0));

@@ -108,6 +108,10 @@ public class Cell {
         return isCloseToCoord(board.getMyTrapPos(), x, y);
     }
 
+    public static boolean isCloseToEnemyBombs(Board board, int x, int y) {
+        return isCloseToCoord(board.getPotentialEnemyTrapPos(), x, y);
+    }
+
     public static boolean isCloseToCoord(Collection<Coord> coords, int x, int y) {
         return coords.stream().anyMatch(coord -> (
                 (coord.getX() == x && coord.getY() == y)

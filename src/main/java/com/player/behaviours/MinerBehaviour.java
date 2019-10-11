@@ -37,7 +37,8 @@ public class MinerBehaviour extends EntityBehaviour {
     int newY = entity.getPos().getY();
     Coord fixedCoord = new Coord(newX, newY);
     int counter = 0;
-    while (board.getCell(fixedCoord).hasAllyTrap(board)
+    while (board.getCell(fixedCoord).isHole()
+            || board.getCell(fixedCoord).hasAllyTrap(board)
             || board.getCell(fixedCoord).hasPotentialEnemyTrap()
             || board.isDangerousEnemyInRange(board.getCell(fixedCoord))) {
       int tmpX = newX, tmpY = newY;

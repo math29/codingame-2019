@@ -25,28 +25,21 @@ public class MinerBehaviour extends EntityBehaviour {
 
     // Find a good cell to mine
     Optional<Cell> closestOre = getClosestSafeInterestingOre();
-    if (!closestOre.isPresent()) {
-      closestOre = this.getClosestOreCell();
-    }
 
     // Found some! Dig if you are close or, otherwise, move
     if (closestOre.isPresent()) {
-      if (closestOre.get().getCoord().distance(entity.getPos()) <= 2) {
-        return returnAction(Action.dig(closestOre.get().getCoord()));
-      } else {
-        return returnAction(Action.move(closestOre.get().getCoord()));
-      }
-    }
-
-    if (entity.isAtHeadquarters()) {
-      return returnAction(Action.move(new Coord(entity.getPos().getX() + 3, entity.getPos().getY())));
+      return digOrMove(closestOre.get().getCoord());
     }
 
     // No christal found, go for default mining
-    int i = 0, newX = entity.getPos().getX(), newY = entity.getPos().getY();
+    int i = 0;
+    int newX = entity.getPos().getX() == 0 ? entity.getPos().getX() + 3 : entity.getPos().getX();
+    int newY = entity.getPos().getY();
     Coord fixedCoord = new Coord(newX, newY);
     int counter = 0;
-    while (board.getCell(fixedCoord).isHole() || board.getCell(fixedCoord).hasAllyTrap(board)) {
+    while (board.getCell(fixedCoord).hasAllyTrap(board)
+            || board.getCell(fixedCoord).hasPotentialEnemyTrap()
+            || board.isDangerousEnemyInRange(board.getCell(fixedCoord))) {
       int tmpX = newX, tmpY = newY;
       switch (i) {
         case 0:
@@ -85,7 +78,16 @@ public class MinerBehaviour extends EntityBehaviour {
       fixedCoord = new Coord(newX, newY);
       i++;
     }
-    return returnAction(Action.dig(fixedCoord));
+
+    return digOrMove(fixedCoord);
+  }
+
+  private Action digOrMove(Coord coord) {
+    if (coord.distance(entity.getPos()) <= 2) {
+      return returnAction(Action.dig(coord));
+    } else {
+      return returnAction(Action.move(coord));
+    }
   }
 
   private Optional<Cell> getClosestSafeInterestingOre() {
@@ -96,7 +98,8 @@ public class MinerBehaviour extends EntityBehaviour {
       if (cell.hasOre()
               && distance < minDistance
               && !cell.hasAllyTrap(board)
-              && !cell.hasPotentialEnemyTrap()) {
+              && !cell.hasPotentialEnemyTrap()
+              && !board.isDangerousEnemyInRange(cell)) {
         closerCell = Optional.of(cell);
         minDistance = distance;
       }

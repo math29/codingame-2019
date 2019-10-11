@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Cell {
     private boolean known;
@@ -108,6 +109,10 @@ public class Cell {
         return isCloseToCoord(board.getMyTrapPos(), x, y);
     }
 
+    public static boolean isCloseToEnemyBombs(Board board, int x, int y) {
+        return isCloseToCoord(board.getPotentialEnemyTrapPos(), x, y);
+    }
+
     public static boolean isCloseToCoord(Collection<Coord> coords, int x, int y) {
         return coords.stream().anyMatch(coord -> (
                 (coord.getX() == x && coord.getY() == y)
@@ -116,5 +121,12 @@ public class Cell {
                         || (coord.getY() == y && (coord.getX() == x - 1
                         || coord.getX() == x + 1))
         ));
+    }
+
+    public Set<Coord> getAllCloseToCellTraps(Board board) {
+        Set<Cell> impactedCells = getImpactedCells(board);
+        return board.getAllTrapPos().stream()
+                .filter(c -> impactedCells.contains(board.getCell(c)))
+                .collect(Collectors.toSet());
     }
 }

@@ -3,6 +3,7 @@ package com.player.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -184,9 +185,14 @@ public class Board implements Cloneable {
         }
 
         for (Coord trapCoord : allCloseToCellTraps) {
-            Set<Cell> impactedCells = this.getCell(trapCoord).getImpactedCells(this);
+            // Consider that impacted cells are the cells within the range of 4 (as enemy can cross 4 cells in 1 turn)
+            Set<Cell> impactedCells = getImpactedCells(new HashSet<>(Collections.singletonList(this.getCell(trapCoord))));
+            for (int i = 0; i < 3; i++) {
+                impactedCells = getImpactedCells(impactedCells);
+            }
+            Set<Cell> finalImpactedCells = impactedCells;
             long enemyCount = this.getOpponentTeam().getRobotsAlive().stream()
-                    .filter(r -> impactedCells.contains(this.getCell(r.getPos())))
+                    .filter(r -> finalImpactedCells.contains(this.getCell(r.getPos())))
                     .count();
 
             if (enemyCount > 0) {
@@ -195,6 +201,15 @@ public class Board implements Cloneable {
         }
 
         return false;
+    }
+
+    public Set<Cell> getImpactedCells(Set<Cell> cells) {
+        Set<Cell> impactedCells = new HashSet<>();
+        for(Cell cell : cells) {
+            Set<Cell> cellTmp = cell.getImpactedCells(this);
+            impactedCells.addAll(cellTmp);
+        }
+        return impactedCells;
     }
 
     public Cell getCell(Coord pos) {

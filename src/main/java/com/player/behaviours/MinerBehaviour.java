@@ -9,6 +9,7 @@ import com.player.model.Cell;
 import com.player.model.Coord;
 import com.player.model.Entity;
 import com.player.model.EntityType;
+import com.player.pathfinding.AStarAlgorithm;
 
 public class MinerBehaviour extends EntityBehaviour {
 
@@ -87,6 +88,7 @@ public class MinerBehaviour extends EntityBehaviour {
     if (coord.distance(entity.getPos()) <= 2) {
       return returnAction(Action.dig(coord));
     } else {
+      AStarAlgorithm.execute(board, this.entity.getPos(), coord);
       return returnAction(Action.move(coord));
     }
   }

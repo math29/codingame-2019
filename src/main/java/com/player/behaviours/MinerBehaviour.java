@@ -33,7 +33,7 @@ public class MinerBehaviour extends EntityBehaviour {
 
     // No christal found, go for default mining
     int i = 0;
-    int newX = entity.getPos().getX() == 0 ? entity.getPos().getX() + 3 : entity.getPos().getX();
+    int newX = entity.getPos().getX() == 0 ? entity.getPos().getX() + 4 : entity.getPos().getX();
     int newY = entity.getPos().getY();
     Coord fixedCoord = new Coord(newX, newY);
     int counter = 0;
@@ -60,7 +60,7 @@ public class MinerBehaviour extends EntityBehaviour {
           newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY();
           break;
         default:
-          newX = fixedCoord.getX() + 3 < board.getWidth() ? fixedCoord.getX() + 3 : fixedCoord.getX();
+          newX = fixedCoord.getX() + 4 < board.getWidth() ? fixedCoord.getX() + 4 : fixedCoord.getX();
           newY = fixedCoord.getY() + 1 < board.getHeight() ? fixedCoord.getY() + 1 : fixedCoord.getY();
 
         // Try to make sure we are not stuck
